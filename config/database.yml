@@ -1,43 +1,31 @@
+default: &default
+    adapter:  mysql2
+    encoding: utf8
+    host: localhost
+    port: 3306
+    reconnect: true
+    pool: 5
+
 development:
-    adapter:  mysql2 
+    <<: *default
     database: <%= ENV["DEVELOPMENT_DB"] %>
     username: <%= ENV["DEVELOPMENT_DB_USERNAME"] %>
     password: <%= ENV["DEVELOPMENT_DB_PASSWORD"] %>
-    encoding: utf8
-    host: localhost 
-    port: 3306
-    reconnect: true
-    pool: 5
 
 test:
-    adapter:  mysql2
+    <<: *default
     database: <%= ENV["TEST_DB"] %>
     username: <%= ENV["TEST_DB_USERNAME"] %>
     password: <%= ENV["TEST_DB_PASSWORD"] %>
-    encoding: utf8
-    host: localhost
-    port: 3306
-    reconnect: true
-    pool: 5
 
 staging:
-    adapter:  mysql2
+    <<: *default
     database: <%= ENV["STAGING_DB"] %>
     username: <%= ENV["STAGING_DB_USERNAME"] %>
     password: <%= ENV["STAGING_DB_PASSWORD"] %>
-    encoding: utf8
-    host: localhost
-    port: 3306
-    reconnect: true
-    pool: 5
 
 production:
-    adapter:  mysql2
+    <<: *default
     database: <%= ENV["PRODUCTION_DB"] %>
     username: <%= ENV["PRODUCTION_DB_USERNAME"] %>
     password: <%= ENV["PRODUCTION_DB_PASSWORD"] %>
-    encoding: utf8
-    host: localhost
-    port: 3306
-    reconnect: true
-    pool: 5
