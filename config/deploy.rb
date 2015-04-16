@@ -15,10 +15,10 @@ set :forward_agent, true
 set :rails_env, lambda { "#{stage}" }
 
 # Puma settings
-set :puma_socket, lambda { "#{deploy_to}/tmp/puma/sockets/#{application}-puma.sock" }
+set :puma_socket, lambda { "#{deploy_to}/tmp/puma/sockets/puma.sock" }
 set :puma_pid, lambda { "#{deploy_to}/tmp/puma/pid" }
 set :puma_state, lambda { "#{deploy_to}/tmp/puma/state" }
-set :pumactl_socket, lambda { "#{deploy_to}/tmp/puma/sockets/#{application}-pumactl.sock" }
+set :pumactl_socket, lambda { "#{deploy_to}/tmp/puma/sockets/pumactl.sock" }
 set :puma_config, lambda { "#{full_current_path}/config/puma.rb" }
 set :puma_error_log, lambda { "#{full_shared_path}/log/puma.error.log" }
 set :puma_access_log, lambda { "#{full_shared_path}/log/puma.access.log" }

@@ -1,5 +1,5 @@
 upstream puma_<%= application %> {
-  server unix:<%= deploy_to %>/tmp/puma/sockets/<%= application %>-puma.sock fail_timeout=0;
+  server unix:<%= puma_socket %> fail_timeout=0;
 }
 
 server {
