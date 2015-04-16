@@ -36,6 +36,10 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  # Rake precompile task puts precompiled assets in this directory in the public folder.
+  # Necessary for custom mina assets deploy setup.
+  config.assets.prefix = "/assets"
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
