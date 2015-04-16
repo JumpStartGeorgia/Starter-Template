@@ -1,5 +1,5 @@
-set :domain, 'alpha.jumpstart.ge'
-set :user, 'prisoners-staging'
-set :application, 'Starter-Template-Staging'
-set :repository, "git@github.com:JumpStartGeorgia/Starter-Template.git"
-set :web_url, "dev-rails4-deploy.jumpstart.ge"
+set :domain, ''
+set :user, ''
+set :application, ''
+set :repository, ''
+set :web_url, ''
