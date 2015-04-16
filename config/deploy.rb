@@ -37,9 +37,9 @@ namespace :reminder do
   task :create_env do
     queue  %[echo ""]
     queue  %[echo "-----> You need to create the .env file in the shared folder on the server; otherwise,"]
-    queue  %[echo "          the app won't know your credentials and database migrations will fail on deploy."]
+    queue  %[echo "the app won't know your credentials and database migrations will fail on deploy."]
     queue  %[echo "-----> Run the below command in your local Rails root directory to copy the example .env file to"]
-    queue  %[echo "          the server, then manually add your credentials to the file."]
+    queue  %[echo "the server, then manually add your credentials to the file."]
     queue  %[echo ""]
     queue  %[echo "cd #{Dir.pwd} && scp .env.example #{user}@#{domain}:#{full_shared_path}/.env"]
     queue  %[echo ""]
@@ -57,7 +57,7 @@ namespace :reminder do
   task :symlink_nginx do
     queue  %[echo ""]
     queue  %[echo "-----> Run the following command on your server to create the symlink from the "]
-    queue  %[echo "       nginx sites-enabled directory to the app's nginx.conf file:"]
+    queue  %[echo "nginx sites-enabled directory to the app's nginx.conf file:"]
     queue  %[echo ""]
     queue  %[echo "sudo ln -nfs #{full_current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"]
     queue  %[echo ""]
@@ -66,9 +66,9 @@ namespace :reminder do
   task :add_to_puma_jungle do
     queue  %[echo ""]
     queue  %[echo "-----> Run the following command on your server to add your app to the list of puma apps in "]
-    queue  %[echo "       the file /etc/puma.conf. All apps in this file are automatically started"]
-    queue  %[echo "       whenever the server is booted up. They can also be controlled with the script "]
-    queue  %[echo "       /etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
+    queue  %[echo "the file /etc/puma.conf. All apps in this file are automatically started"]
+    queue  %[echo "whenever the server is booted up. They can also be controlled with the script "]
+    queue  %[echo "/etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
     queue  %[echo ""]
     queue  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{full_current_path}/config/puma.rb #{full_shared_path}/log/puma.log"]
     queue  %[echo ""]
