@@ -167,7 +167,7 @@ namespace :deploy do
           system %[echo ""]
           system %[echo "mina #{stage} deploy precompile=true"]
           system %[echo "------ or for more information ------"]
-          system %[echo "mina #{stage} deploy precompile=true verbose=true"]
+          system %[echo "mina #{stage} deploy precompile=true --verbose"]
           system %[echo ""]
           exit
         else
@@ -226,14 +226,14 @@ end
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   deploy do
-    if ENV['verbose']
-      set :rsync_verbose, "--verbose"
-    else
-      set :bundle_options, "#{bundle_options} --quiet"
+    set :rsync_verbose, "--verbose"
+
+    unless verbose_mode?
       set :rsync_verbose, ""
+      set :bundle_options, "#{bundle_options} --quiet"
     end
 
-    system %[echo "Note: If this is the first deploy, run 'mina #{stage} setup' to view important reminders"]
+    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminder:all' to view important reminders"]
     invoke :'deploy:check_revision'
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
