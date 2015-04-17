@@ -126,7 +126,13 @@ task :setup => :environment do
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
 
   queue! %[echo ""]
-  queue! %[echo "Important: Before deploying, run 'mina #{stage} reminders' to see important commands that must be run"]
+  queue! %[echo "------------------------- IMPORTANT -------------------------"]
+  queue! %[echo ""]
+  queue! %[echo "Before deploying for the first time, run 'mina #{stage} reminders'"]
+  queue! %[echo "to see important commands that should be run before and after first deploy"]
+  queue! %[echo ""]
+  queue! %[echo "------------------------- IMPORTANT -------------------------"]
+  queue! %[echo ""]
 end
 
 namespace :deploy do
