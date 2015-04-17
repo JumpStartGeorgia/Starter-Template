@@ -43,7 +43,6 @@ task :reminders do
 end
 
 namespace :reminders do
-
   task :before_deploy do
     queue %[echo ""]
     queue %[echo "-------- Before First Deploy --------"]
