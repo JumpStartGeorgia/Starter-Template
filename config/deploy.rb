@@ -125,6 +125,8 @@ task :setup => :environment do
   queue! %[mkdir -p "#{deploy_to}/tmp/assets"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
 
+  queue! %[echo ""]
+  queue! %[echo "Note: To see these reminders again, run the command 'mina #{stage} reminder:all'"]
   invoke :'reminder:all'
 end
 
