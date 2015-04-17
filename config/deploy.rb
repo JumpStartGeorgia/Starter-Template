@@ -33,26 +33,36 @@ task :environment do
   invoke :'rbenv:load'
 end
 
-namespace :reminder do
-  task :all do
+task :reminders do
+  queue %[echo ""]
+  queue %[echo "------------------------- REMINDERS -------------------------"]
+  queue %[echo ""]
+
+  invoke 'reminders:before_deploy'
+  invoke 'reminders:after_deploy'
+end
+
+namespace :reminders do
+
+  task :before_deploy do
     queue %[echo ""]
-    queue %[echo "------------------------- REMINDERS -------------------------"]
+    queue %[echo "-------- Before First Deploy --------"]
     queue %[echo ""]
 
-    invoke 'reminder:before_deploy:all'
-    invoke 'reminder:after_deploy:all'
+    invoke 'reminders:before_deploy:create_env'
+    invoke 'reminders:before_deploy:add_github_to_known_hosts'
+  end
+
+  task :after_deploy do
+    queue %[echo ""]
+    queue %[echo "-------- After First Deploy --------"]
+    queue %[echo ""]
+
+    invoke 'reminders:after_deploy:symlink_nginx'
+    invoke 'reminders:after_deploy:add_to_puma_jungle'
   end
 
   namespace :before_deploy do
-    task :all do
-      queue %[echo ""]
-      queue %[echo "-------- Before First Deploy --------"]
-      queue %[echo ""]
-
-      invoke 'reminder:before_deploy:create_env'
-      invoke 'reminder:before_deploy:add_github_to_known_hosts'
-    end
-
     task :create_env do
       queue  %[echo ""]
       queue  %[echo "-----> You need to create the .env file in the shared folder on the server; otherwise,"]
@@ -75,15 +85,6 @@ namespace :reminder do
   end
 
   namespace :after_deploy do
-    task :all do
-      queue %[echo ""]
-      queue %[echo "-------- After First Deploy --------"]
-      queue %[echo ""]
-
-      invoke 'reminder:after_deploy:symlink_nginx'
-      invoke 'reminder:after_deploy:add_to_puma_jungle'
-    end
-
     task :symlink_nginx do
       queue  %[echo ""]
       queue  %[echo "-----> Run the following command on your server to create the symlink from the "]
@@ -126,8 +127,8 @@ task :setup => :environment do
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
 
   queue! %[echo ""]
-  queue! %[echo "Note: To see these reminders again, run the command 'mina #{stage} reminder:all'"]
-  invoke :'reminder:all'
+  queue! %[echo "Note: To see these reminders again, run the command 'mina #{stage} reminders'"]
+  invoke :'reminders'
 end
 
 namespace :deploy do
@@ -233,7 +234,7 @@ task :deploy => :environment do
       set :bundle_options, "#{bundle_options} --quiet"
     end
 
-    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminder:all' to view important reminders"]
+    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminders' to view important reminders"]
     invoke :'deploy:check_revision'
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
