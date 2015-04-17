@@ -34,44 +34,75 @@ task :environment do
 end
 
 namespace :reminder do
-  task :create_env do
-    queue  %[echo ""]
-    queue  %[echo "-----> You need to create the .env file in the shared folder on the server; otherwise,"]
-    queue  %[echo "the app won't know your credentials and database migrations will fail on deploy."]
-    queue  %[echo "-----> Run the below command in your local Rails root directory to copy the example .env file to"]
-    queue  %[echo "the server, then manually add your credentials to the file."]
-    queue  %[echo ""]
-    queue  %[echo "cd #{Dir.pwd} && scp .env.example #{user}@#{domain}:#{full_shared_path}/.env"]
-    queue  %[echo ""]
+  task :all do
+    queue %[echo ""]
+    queue %[echo "------------------------- REMINDERS -------------------------"]
+    queue %[echo ""]
+
+    invoke 'reminder:before_deploy:all'
+    invoke 'reminder:after_deploy:all'
   end
 
-  task :add_github_to_known_hosts do
-    queue  %[echo ""]
-    queue  %[echo "-----> Run the following command on your server to add github to the list of known hosts. This will"]
-    queue  %[echo "-----> allow you to deploy (otherwise the git clone step will fail)."]
-    queue  %[echo ""]
-    queue  %[echo "ssh-keyscan -H github.com >> ~/.ssh/known_hosts"]
-    queue  %[echo ""]
+  namespace :before_deploy do
+    task :all do
+      queue %[echo ""]
+      queue %[echo "-------- Before First Deploy --------"]
+      queue %[echo ""]
+
+      invoke 'reminder:before_deploy:create_env'
+      invoke 'reminder:before_deploy:add_github_to_known_hosts'
+    end
+
+    task :create_env do
+      queue  %[echo ""]
+      queue  %[echo "-----> You need to create the .env file in the shared folder on the server; otherwise,"]
+      queue  %[echo "the app won't know your credentials and database migrations will fail on deploy."]
+      queue  %[echo "-----> Run the below command in your local Rails root directory to copy the example .env file to"]
+      queue  %[echo "the server, then manually add your credentials to the file."]
+      queue  %[echo ""]
+      queue  %[echo "cd #{Dir.pwd} && scp .env.example #{user}@#{domain}:#{full_shared_path}/.env"]
+      queue  %[echo ""]
+    end
+
+    task :add_github_to_known_hosts do
+      queue  %[echo ""]
+      queue  %[echo "-----> Run the following command on your server to add github to the list of known hosts. This will"]
+      queue  %[echo "-----> allow you to deploy (otherwise the git clone step will fail)."]
+      queue  %[echo ""]
+      queue  %[echo "ssh-keyscan -H github.com >> ~/.ssh/known_hosts"]
+      queue  %[echo ""]
+    end
   end
 
-  task :symlink_nginx do
-    queue  %[echo ""]
-    queue  %[echo "-----> Run the following command on your server to create the symlink from the "]
-    queue  %[echo "nginx sites-enabled directory to the app's nginx.conf file:"]
-    queue  %[echo ""]
-    queue  %[echo "sudo ln -nfs #{full_current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"]
-    queue  %[echo ""]
-  end
+  namespace :after_deploy do
+    task :all do
+      queue %[echo ""]
+      queue %[echo "-------- After First Deploy --------"]
+      queue %[echo ""]
 
-  task :add_to_puma_jungle do
-    queue  %[echo ""]
-    queue  %[echo "-----> Run the following command on your server to add your app to the list of puma apps in "]
-    queue  %[echo "the file /etc/puma.conf. All apps in this file are automatically started"]
-    queue  %[echo "whenever the server is booted up. They can also be controlled with the script "]
-    queue  %[echo "/etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
-    queue  %[echo ""]
-    queue  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{full_current_path}/config/puma.rb #{full_shared_path}/log/puma.log"]
-    queue  %[echo ""]
+      invoke 'reminder:after_deploy:symlink_nginx'
+      invoke 'reminder:after_deploy:add_to_puma_jungle'
+    end
+
+    task :symlink_nginx do
+      queue  %[echo ""]
+      queue  %[echo "-----> Run the following command on your server to create the symlink from the "]
+      queue  %[echo "nginx sites-enabled directory to the app's nginx.conf file:"]
+      queue  %[echo ""]
+      queue  %[echo "sudo ln -nfs #{full_current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"]
+      queue  %[echo ""]
+    end
+
+    task :add_to_puma_jungle do
+      queue  %[echo ""]
+      queue  %[echo "-----> Run the following command on your server to add your app to the list of puma apps in "]
+      queue  %[echo "the file /etc/puma.conf. All apps in this file are automatically started"]
+      queue  %[echo "whenever the server is booted up. They can also be controlled with the script "]
+      queue  %[echo "/etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
+      queue  %[echo ""]
+      queue  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{full_current_path}/config/puma.rb #{full_shared_path}/log/puma.log"]
+      queue  %[echo ""]
+    end
   end
 end
 
@@ -94,22 +125,7 @@ task :setup => :environment do
   queue! %[mkdir -p "#{deploy_to}/tmp/assets"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
 
-  queue %[echo ""]
-  queue %[echo "------------------------- REMINDERS -------------------------"]
-  queue %[echo ""]
-  queue %[echo ""]
-  queue %[echo "-------- Before First Deploy --------"]
-  queue %[echo ""]
-
-  invoke :'reminder:create_env'
-  invoke :'reminder:add_github_to_known_hosts'
-
-  queue %[echo ""]
-  queue %[echo "-------- After First Deploy --------"]
-  queue %[echo ""]
-
-  invoke 'reminder:symlink_nginx'
-  invoke 'reminder:add_to_puma_jungle'
+  invoke :'reminder:all'
 end
 
 namespace :deploy do
