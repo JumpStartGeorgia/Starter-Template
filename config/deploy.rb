@@ -6,7 +6,8 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
 
-set :deploy_to, lambda { "/home/#{user}/#{application}" }
+set :user_path, lambda { "/home/#{user}" }
+set :deploy_to, lambda { "#{user_path}/#{application}" }
 set :full_current_path, lambda { "#{deploy_to}/#{current_path}" }
 set :full_shared_path, lambda { "#{deploy_to}/#{shared_path}" }
 set :branch, 'master'
@@ -48,7 +49,7 @@ namespace :reminders do
     system %[echo "-------- Before First Deploy --------"]
     system %[echo ""]
 
-    invoke 'reminders:before_deploy:create_env'
+    invoke 'reminders:before_deploy:edit_env'
     invoke 'reminders:before_deploy:add_github_to_known_hosts'
   end
 
@@ -62,14 +63,10 @@ namespace :reminders do
   end
 
   namespace :before_deploy do
-    task :create_env do
+    task :edit_env do
       system  %[echo ""]
-      system  %[echo "-----> You need to create the .env file in the shared folder on the server; otherwise,"]
-      system  %[echo "the app won't know your credentials and database migrations will fail on deploy."]
-      system  %[echo "-----> Run the below command in your local Rails root directory to copy the example .env file to"]
-      system  %[echo "the server, then manually add your credentials to the file."]
-      system  %[echo ""]
-      system  %[echo "cd #{Dir.pwd} && scp .env.example #{user}@#{domain}:#{full_shared_path}/.env"]
+      system  %[echo "-----> You need to add your app's secrets #{full_shared_path}/.env on the server;"]
+      system  %[echo "otherwise, the app won't know your credentials and database migrations will fail on deploy."]
       system  %[echo ""]
     end
 
@@ -106,10 +103,18 @@ namespace :reminders do
   end
 end
 
-# Put any custom mkdir's in here for   when `mina setup` is ran.
+# Put any custom mkdir's in here for when `mina setup` is run.
 # For Rails apps, we'll make some of the shared paths that are shared between
 # all releases.
 task :setup => :environment do
+  temp_env_example_path = "#{user_path}/.env.example-#{application}"
+  shared_env_path = "#{full_shared_path}/.env"
+
+  capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
+
+  if !env_exists
+    system %[scp .env.example #{user}@#{domain}:#{temp_env_example_path}]
+  end
   queue! %[mkdir -p "#{full_shared_path}/log"]
   queue! %[chmod g+rx,u+rwx "#{full_shared_path}/log"]
 
@@ -124,6 +129,11 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/tmp/assets"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
+
+  if !env_exists
+    queue! %[echo "Moving copy of local .env.example to #{shared_env_path}"]
+    queue! %[mv #{temp_env_example_path} #{shared_env_path}]
+  end
 
   queue! %[echo ""]
   queue! %[echo "------------------------- IMPORTANT -------------------------"]
