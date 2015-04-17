@@ -146,15 +146,15 @@ end
 namespace :deploy do
   task :check_revision do
     unless `git rev-parse HEAD` == `git rev-parse origin/#{branch}`
-      puts "WARNING: HEAD is not the same as origin/#{branch}"
-      puts "Run `git push` to sync changes."
+      system %[echo "WARNING: HEAD is not the same as origin/#{branch}"]
+      system %[echo "Run 'git push' to sync changes."]
       exit
     end
 
     unless `git status`.include? 'nothing to commit, working directory clean'
-      puts "WARNING: There are uncommitted changes to the local git repository, which"
-      puts "may cause problems for locally precompiling assets."
-      puts "Please clean local repository with `git stash` or `git reset`."
+      system %[echo "WARNING: There are uncommitted changes to the local git repository, which"]
+      system %[echo "may cause problems for locally precompiling assets."]
+      system %[echo "Please clean local repository with 'git stash' or 'git reset'."]
       exit
     end
   end
@@ -246,8 +246,8 @@ task :deploy => :environment do
       set :bundle_options, "#{bundle_options} --quiet"
     end
 
-    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminders' to view important reminders"]
     invoke :'deploy:check_revision'
+    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminders' to view important reminders"]
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
     invoke :'git:clone'
