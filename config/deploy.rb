@@ -103,18 +103,16 @@ namespace :reminders do
   end
 end
 
-# Put any custom mkdir's in here for when `mina setup` is run.
-# For Rails apps, we'll make some of the shared paths that are shared between
-# all releases.
 task :setup => :environment do
   temp_env_example_path = "#{user_path}/.env.example-#{application}"
   shared_env_path = "#{full_shared_path}/.env"
 
   capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
-  if !env_exists
+  unless env_exists
     system %[scp .env.example #{user}@#{domain}:#{temp_env_example_path}]
   end
+
   queue! %[mkdir -p "#{full_shared_path}/log"]
   queue! %[chmod g+rx,u+rwx "#{full_shared_path}/log"]
 
@@ -130,7 +128,7 @@ task :setup => :environment do
   queue! %[mkdir -p "#{deploy_to}/tmp/assets"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/assets"]
 
-  if !env_exists
+  unless env_exists
     queue! %[echo "Moving copy of local .env.example to #{shared_env_path}"]
     queue! %[mv #{temp_env_example_path} #{shared_env_path}]
   end
