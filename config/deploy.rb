@@ -23,6 +23,7 @@ set :pumactl_socket, lambda { "#{deploy_to}/tmp/puma/sockets/pumactl.sock" }
 set :puma_config, lambda { "#{full_current_path}/config/puma.rb" }
 set :puma_error_log, lambda { "#{full_shared_path}/log/puma.error.log" }
 set :puma_access_log, lambda { "#{full_shared_path}/log/puma.access.log" }
+set :puma_log, lambda { "#{full_shared_path}/log/puma.log" }
 set :puma_env, lambda { "#{rails_env}" }
 
 # Assets settings
@@ -97,7 +98,7 @@ namespace :reminders do
       system  %[echo "whenever the server is booted up. They can also be controlled with the script "]
       system  %[echo "/etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
       system  %[echo ""]
-      system  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{full_current_path}/config/puma.rb #{full_shared_path}/log/puma.log"]
+      system  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}"]
       system  %[echo ""]
     end
   end
