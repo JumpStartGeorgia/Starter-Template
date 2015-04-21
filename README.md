@@ -1,6 +1,6 @@
-# Starter-Template
+# Rails 4 Starter Template
 
-This Rails Starter Template is meant as a foundation upon which Rails applications can be built quickly and sustainably. It uses the following technologies:
+This Rails 4 Starter Template is meant as a foundation upon which Rails applications can be built quickly and sustainably. It uses the following technologies:
 
 - Deploy: Mina
 - HTML Server: Nginx
@@ -13,3 +13,36 @@ This Rails Starter Template is meant as a foundation upon which Rails applicatio
 3. Run `git fetch template` to update local copy of template repository.
 4. Run `git merge template/master` to merge in changes from the template repository into your current branch. If you have committed changes to your project since the last time you merged in the template repository (or if this is your first time merging in the repository), you may have to resolve merge conflicts in your code.
 5. Repeat steps #3 and #4 every so often in order to incorporate changes in the template repository.
+
+## Using Mina
+
+### Setup
+
+1. Add your stage-specific deploy variables to the files in config/deploy.
+2. Add the following lines to config/environments/development.rb:
+
+```
+# Rake precompile task puts precompiled assets in this directory in the public folder.
+# Necessary for custom mina assets deploy setup.
+config.assets.prefix = "/assets"
+```
+
+### Deploy
+
+1. Run `mina setup`
+  - The default stage is set to `staging`, so this command is equivalent to the command `mina staging setup`
+2. Run `mina rails:edit_env` and add your project secrets
+3. Run `mina deploy first_deploy=true --verbose`
+  - If you get the error “Host key verification failed” when mina tries to clone the git repository, you may have to add your repository’s host to known_hosts on your server. You can run one of these two commands on the server to fix that (works for github):
+    - `ssh-keyscan -H github.com >> ~/.ssh/known_hosts`
+      - Adds github to user’s known hosts
+    - `ssh-keyscan -H github.com >> etc/ssh/ssh_known_hosts`
+      - Adds github to known hosts for all users
+4. Run `mina post_setup sudo_user=<username>`, where <username> is a user with sudo permissions on your server. You will need to enter the user’s password a number of times to execute the sudo commands.
+5. Deploy further changes with `mina deploy` or `mina deploy --verbose`
+6. Repeat these steps for your other stages, simply by inserting the stage name into the command after `mina`. Examples:
+  - `mina setup` --> `mina production setup`
+  - `mina deploy precompile=true --verbose` --> `mina production deploy precompile=true --verbose`
+
+Note: If you wish to remove your application from the server, run `mina destroy sudo_user=<username>`, where <username> is a user with sudo permissions on your server.
+
