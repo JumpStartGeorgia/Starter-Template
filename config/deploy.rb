@@ -13,7 +13,7 @@ set :full_shared_path, lambda { "#{deploy_to}/#{shared_path}" }
 set :full_tmp_path, lambda { "#{deploy_to}/tmp" }
 set :branch, 'master'
 set :initial_directories, ["#{full_shared_path}/log", "#{full_shared_path}/config", "#{full_shared_path}/public/system", "#{full_tmp_path}/puma/sockets", "#{full_tmp_path}/assets"]
-set :shared_paths, %w[.env log config/nginx.conf config/puma.rb public/system]
+set :shared_paths, %w[.env log public/system]
 set :forward_agent, true
 set :rails_env, lambda { "#{stage}" }
 
@@ -22,14 +22,14 @@ set :puma_socket, lambda { "#{deploy_to}/tmp/puma/sockets/puma.sock" }
 set :puma_pid, lambda { "#{deploy_to}/tmp/puma/pid" }
 set :puma_state, lambda { "#{deploy_to}/tmp/puma/state" }
 set :pumactl_socket, lambda { "#{deploy_to}/tmp/puma/sockets/pumactl.sock" }
-set :puma_config, lambda { "#{full_current_path}/config/puma.rb" }
+set :puma_config, lambda { "#{full_shared_path}/config/puma.rb" }
 set :puma_error_log, lambda { "#{full_shared_path}/log/puma.error.log" }
 set :puma_access_log, lambda { "#{full_shared_path}/log/puma.access.log" }
 set :puma_log, lambda { "#{full_shared_path}/log/puma.log" }
 set :puma_env, lambda { "#{rails_env}" }
 
 # Nginx settings
-set :nginx_conf, lambda { "#{full_current_path}/config/nginx.conf" }
+set :nginx_conf, lambda { "#{full_shared_path}/config/nginx.conf" }
 set :nginx_symlink, lambda { "/etc/nginx/sites-enabled/#{application}" }
 
 # Assets settings
@@ -131,14 +131,14 @@ namespace :puma do
   end
 
   namespace :jungle do
-    task :add_application do |task|
+    task :add do |task|
       system %[echo ""]
       system %[echo "Adding application to puma jungle at /etc/puma.conf"]
       system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}']
       system %[echo ""]
     end
 
-    task :remove_application do |task|
+    task :remove do |task|
       system %[echo ""]
       system %[echo "Removing application from puma jungle at /etc/puma.conf"]
       system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma remove #{deploy_to}']
@@ -293,7 +293,7 @@ task :deploy => :environment do
       set :bundle_options, "#{bundle_options} --quiet"
     end
 
-    invoke :'deploy:check_revision'
+    #invoke :'deploy:check_revision'
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
     invoke :'git:clone'
@@ -329,13 +329,13 @@ end
 
 task :post_setup do
   invoke :'nginx:create_symlink'
-  invoke :'puma:jungle:add_application'
+  invoke :'puma:jungle:add'
 end
 
 task :destroy do
   invoke :'remove_application'
   invoke :'nginx:remove_symlink'
-  invoke :'puma:jungle:remove_application'
+  invoke :'puma:jungle:remove'
 end
 
 task :remove_application do |task|
