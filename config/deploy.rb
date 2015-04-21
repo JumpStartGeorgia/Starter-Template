@@ -100,6 +100,27 @@ namespace :nginx do
     system %[#{sudo_ssh_cmd(task)} 'sudo rm #{nginx_symlink}']
     system %[echo ""]
   end
+
+  task :start do |task|
+    system %[echo ""]
+    system %[echo "Starting Nginx."]
+    system %[#{sudo_ssh_cmd(task)} 'sudo service nginx start']
+    system %[echo ""]
+  end
+
+  task :stop do |task|
+    system %[echo ""]
+    system %[echo "Stopping Nginx."]
+    system %[#{sudo_ssh_cmd(task)} 'sudo service nginx stop']
+    system %[echo ""]
+  end
+
+  task :status do |task|
+    system %[echo ""]
+    system %[echo "Checking Nginx status."]
+    system %[#{sudo_ssh_cmd(task)} 'sudo service nginx status']
+    system %[echo ""]
+  end
 end
 
 namespace :puma do
