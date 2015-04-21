@@ -173,7 +173,7 @@ namespace :deploy do
   namespace :assets do
     task :decide_whether_to_precompile do
       set :precompile_assets, false
-      if ENV['precompile']
+      if ENV['precompile'] == 'true'
         set :precompile_assets, true
       else
         # Locations where assets may have changed; check Gemfile.lock to ensure that gem assets are the same
@@ -261,15 +261,18 @@ end
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   deploy do
-    set :rsync_verbose, "--verbose"
+    if ENV['first_deploy'] == 'true'
+      first_deploy = true
+      ENV['precompile'] = 'true'
+    end
 
+    set :rsync_verbose, "--verbose"
     unless verbose_mode?
       set :rsync_verbose, ""
       set :bundle_options, "#{bundle_options} --quiet"
     end
 
     invoke :'deploy:check_revision'
-    system %[echo "Note: If this is the first deploy, run the following command after you finish: 'mina #{stage} post_setup sudo_user=<username>' (insert a user with sudo access into <username>)"]
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
     invoke :'git:clone'
@@ -284,7 +287,21 @@ task :deploy => :environment do
     to :launch do
       queue "mkdir -p #{full_current_path}/tmp/"
       queue "touch #{full_current_path}/tmp/restart.txt"
-      invoke :'puma:phased_restart'
+      if first_deploy
+        invoke :'puma:start'
+        queue! %[echo ""]
+        queue! %[echo "------------------------- IMPORTANT -------------------------"]
+        queue! %[echo ""]
+        queue! %[echo "As this is the first deploy, you need to run the following command:"]
+        queue! %[echo "(Insert a user with sudo access into <username>)"]
+        queue! %[echo ""]
+        queue! %[echo "mina #{stage} post_setup sudo_user=<username>"]
+        queue! %[echo ""]
+        queue! %[echo "------------------------- IMPORTANT -------------------------"]
+        queue! %[echo ""]
+      else
+        invoke :'puma:phased_restart'
+      end
     end
   end
 end
