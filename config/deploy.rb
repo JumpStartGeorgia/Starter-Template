@@ -10,11 +10,10 @@ set :user_path, lambda { "/home/#{user}" }
 set :deploy_to, lambda { "#{user_path}/#{application}" }
 set :full_current_path, lambda { "#{deploy_to}/#{current_path}" }
 set :full_shared_path, lambda { "#{deploy_to}/#{shared_path}" }
+set :full_tmp_path, lambda { "#{deploy_to}/tmp" }
 set :branch, 'master'
-set :shared_directories, %w[log config public/system]
-set :shared_files, %w[.env config/nginx.conf config/puma.rb]
-set :shared_paths, shared_directories.zip(shared_files).flatten.compact
-set :tmp_directories, %w[puma/sockets assets]
+set :initial_directories, ["#{full_shared_path}/log", "#{full_shared_path}/config", "#{full_shared_path}/public/system", "#{full_tmp_path}/puma/sockets", "#{full_tmp_path}/assets"]
+set :shared_paths, %w[.env log config/nginx.conf config/puma.rb public/system]
 set :forward_agent, true
 set :rails_env, lambda { "#{stage}" }
 
@@ -90,14 +89,9 @@ task :setup => :environment do
     system %[scp .env.example #{user}@#{domain}:#{temp_env_example_path}]
   end
 
-  shared_directories.each do |shared_dir|
-    queue! %[mkdir -p "#{full_shared_path}/#{shared_dir}"]
-    queue! %[chmod g+rx,u+rwx "#{full_shared_path}/#{shared_dir}"]
-  end
-
-  tmp_directories.each do |tmp_dir|
-    queue! %[mkdir -p "#{deploy_to}/tmp/#{tmp_dir}"]
-    queue! %[chmod g+rx,u+rwx "#{deploy_to}/tmp/#{tmp_dir}"]
+  initial_directories.each do |dir|
+    queue! %[mkdir -p "#{dir}"]
+    queue! %[chmod g+rx,u+rwx "#{dir}"]
   end
 
   unless env_exists
