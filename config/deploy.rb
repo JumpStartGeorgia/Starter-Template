@@ -59,18 +59,10 @@ namespace :reminders do
     system %[echo "-------- Before First Deploy --------"]
     system %[echo ""]
 
-    invoke 'reminders:before_deploy:edit_env'
     invoke 'reminders:before_deploy:add_github_to_known_hosts'
   end
 
   namespace :before_deploy do
-    task :edit_env do
-      system  %[echo ""]
-      system  %[echo "-----> You need to add your app's secrets #{full_shared_path}/.env on the server;"]
-      system  %[echo "otherwise, the app won't know your credentials and database migrations will fail on deploy."]
-      system  %[echo ""]
-    end
-
     task :add_github_to_known_hosts do
       system  %[echo ""]
       system  %[echo "-----> Run the following command on your server to add github to the list of known hosts. This will"]
@@ -82,39 +74,19 @@ namespace :reminders do
   end
 end
 
-task :setup => :environment do
-  capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
-
-  unless env_exists
-    system %[scp .env.example #{user}@#{domain}:#{temp_env_example_path}]
+namespace :rails do
+  task :edit_env do
+    queue %[vim #{shared_env_path}]
   end
-
-  initial_directories.each do |dir|
-    queue! %[mkdir -p "#{dir}"]
-    queue! %[chmod g+rx,u+rwx "#{dir}"]
-  end
-
-  unless env_exists
-    queue! %[echo "Moving copy of local .env.example to #{shared_env_path}"]
-    queue! %[mv #{temp_env_example_path} #{shared_env_path}]
-    queue! %[echo ""]
-    queue! %[echo "------------------------- IMPORTANT -------------------------"]
-    queue! %[echo ""]
-    queue! %[echo "Run the following command and add your secrets to the .env file:"]
-    queue! %[echo ""]
-    queue! %[echo "mina #{stage} rails:edit_env"]
-    queue! %[echo ""]
-    queue! %[echo "------------------------- IMPORTANT -------------------------"]
-    queue! %[echo ""]
-  end
-end
-
-task :post_setup do
-  invoke :'nginx:create_symlink'
-  invoke :'puma:jungle:add_application'
 end
 
 namespace :nginx do
+  task :generate_conf do
+    conf = ERB.new(File.read("./config/nginx.conf.erb")).result()
+    queue %[echo "-----> Generating new config/nginx.conf"]
+    queue %[echo '#{conf}' > #{full_shared_path}/config/nginx.conf]
+  end
+
   task :create_symlink do |task|
     system %[echo ""]
     system %[echo "Creating Nginx symlink: #{nginx_symlink} ===> #{nginx_conf}"]
@@ -130,9 +102,55 @@ namespace :nginx do
   end
 end
 
-namespace :rails do
-  task :edit_env do
-    queue %[vim #{shared_env_path}]
+namespace :puma do
+  task :generate_conf do
+    conf = ERB.new(File.read("./config/puma.rb.erb")).result()
+    queue %[echo "-----> Generating new config/puma.rb"]
+    queue %[echo '#{conf}' > #{full_shared_path}/config/puma.rb]
+  end
+
+  namespace :jungle do
+    task :add_application do |task|
+      system %[echo ""]
+      system %[echo "Adding application to puma jungle at /etc/puma.conf"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}']
+      system %[echo ""]
+    end
+
+    task :remove_application do |task|
+      system %[echo ""]
+      system %[echo "Removing application from puma jungle at /etc/puma.conf"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma remove #{deploy_to}']
+      system %[echo ""]
+    end
+
+    task :start do |task|
+      system %[echo ""]
+      system %[echo "Starting all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma start']
+      system %[echo ""]
+    end
+
+    task :stop do |task|
+      system %[echo ""]
+      system %[echo "Stopping all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma stop']
+      system %[echo ""]
+    end
+
+    task :status do |task|
+      system %[echo ""]
+      system %[echo "Checking status of all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma status']
+      system %[echo ""]
+    end
+
+    task :restart do |task|
+      system %[echo ""]
+      system %[echo "Restarting all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma restart']
+      system %[echo ""]
+    end
   end
 end
 
@@ -213,63 +231,30 @@ namespace :deploy do
   end
 end
 
-namespace :nginx do
-  task :generate_conf do
-    conf = ERB.new(File.read("./config/nginx.conf.erb")).result()
-    queue %[echo "-----> Generating new config/nginx.conf"]
-    queue %[echo '#{conf}' > #{full_shared_path}/config/nginx.conf]
-  end
-end
+task :setup => :environment do
+  capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
-namespace :puma do
-  task :generate_conf do
-    conf = ERB.new(File.read("./config/puma.rb.erb")).result()
-    queue %[echo "-----> Generating new config/puma.rb"]
-    queue %[echo '#{conf}' > #{full_shared_path}/config/puma.rb]
+  unless env_exists
+    system %[scp .env.example #{user}@#{domain}:#{temp_env_example_path}]
   end
 
-  namespace :jungle do
-    task :add_application do |task|
-      system %[echo ""]
-      system %[echo "Adding application to puma jungle at /etc/puma.conf"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}']
-      system %[echo ""]
-    end
+  initial_directories.each do |dir|
+    queue! %[mkdir -p "#{dir}"]
+    queue! %[chmod g+rx,u+rwx "#{dir}"]
+  end
 
-    task :remove_application do |task|
-      system %[echo ""]
-      system %[echo "Removing application from puma jungle at /etc/puma.conf"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma remove #{deploy_to}']
-      system %[echo ""]
-    end
-
-    task :start do |task|
-      system %[echo ""]
-      system %[echo "Starting all puma jungle applications"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma start']
-      system %[echo ""]
-    end
-
-    task :stop do |task|
-      system %[echo ""]
-      system %[echo "Stopping all puma jungle applications"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma stop']
-      system %[echo ""]
-    end
-
-    task :status do |task|
-      system %[echo ""]
-      system %[echo "Checking status of all puma jungle applications"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma status']
-      system %[echo ""]
-    end
-
-    task :restart do |task|
-      system %[echo ""]
-      system %[echo "Restarting all puma jungle applications"]
-      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma restart']
-      system %[echo ""]
-    end
+  unless env_exists
+    queue! %[echo "Moving copy of local .env.example to #{shared_env_path}"]
+    queue! %[mv #{temp_env_example_path} #{shared_env_path}]
+    queue! %[echo ""]
+    queue! %[echo "------------------------- IMPORTANT -------------------------"]
+    queue! %[echo ""]
+    queue! %[echo "Run the following command and add your secrets to the .env file:"]
+    queue! %[echo ""]
+    queue! %[echo "mina #{stage} rails:edit_env"]
+    queue! %[echo ""]
+    queue! %[echo "------------------------- IMPORTANT -------------------------"]
+    queue! %[echo ""]
   end
 end
 
@@ -302,6 +287,11 @@ task :deploy => :environment do
       invoke :'puma:phased_restart'
     end
   end
+end
+
+task :post_setup do
+  invoke :'nginx:create_symlink'
+  invoke :'puma:jungle:add_application'
 end
 
 task :destroy do
