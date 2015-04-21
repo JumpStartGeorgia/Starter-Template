@@ -45,35 +45,6 @@ task :environment do
   invoke :'rbenv:load'
 end
 
-task :reminders do
-  system %[echo ""]
-  system %[echo "------------------------- REMINDERS -------------------------"]
-  system %[echo ""]
-
-  invoke 'reminders:before_deploy'
-end
-
-namespace :reminders do
-  task :before_deploy do
-    system %[echo ""]
-    system %[echo "-------- Before First Deploy --------"]
-    system %[echo ""]
-
-    invoke 'reminders:before_deploy:add_github_to_known_hosts'
-  end
-
-  namespace :before_deploy do
-    task :add_github_to_known_hosts do
-      system  %[echo ""]
-      system  %[echo "-----> Run the following command on your server to add github to the list of known hosts. This will"]
-      system  %[echo "-----> allow you to deploy (otherwise the git clone step will fail)."]
-      system  %[echo ""]
-      system  %[echo "ssh-keyscan -H github.com >> ~/.ssh/known_hosts"]
-      system  %[echo ""]
-    end
-  end
-end
-
 namespace :rails do
   task :edit_env do
     queue %[vim #{shared_env_path}]
