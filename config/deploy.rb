@@ -189,16 +189,18 @@ namespace :deploy do
 
         current_commit = `git rev-parse HEAD`.strip()
 
-        # Get deployed commit hash from FETCH_HEAD file
+        # Get deployed commit hash
         deployed_commit = capture(%[cat #{deploy_to}/scm/FETCH_HEAD]).split(" ")[0]
 
         # If FETCH_HEAD file does not exist or deployed_commit doesn't look like a hash, ask user to force precompile
         if deployed_commit == nil || deployed_commit.length != 40
           system %[echo "WARNING: Cannot determine the commit hash of the previous release on the server."]
-          system %[echo "If this is your first deploy (or you want to skip this error), deploy like this:"]
+          system %[echo "If this is your first deploy, deploy like this:"]
           system %[echo ""]
-          system %[echo "mina #{stage} deploy precompile=true"]
-          system %[echo "------ or for more information ------"]
+          system %[echo "mina #{stage} deploy first_deploy=true --verbose"]
+          system %[echo ""]
+          system %[echo "To skip this error and force precompile, deploy like this:"]
+          system %[echo ""]
           system %[echo "mina #{stage} deploy precompile=true --verbose"]
           system %[echo ""]
           exit
