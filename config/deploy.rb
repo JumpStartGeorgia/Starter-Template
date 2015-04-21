@@ -26,6 +26,10 @@ set :puma_access_log, lambda { "#{full_shared_path}/log/puma.access.log" }
 set :puma_log, lambda { "#{full_shared_path}/log/puma.log" }
 set :puma_env, lambda { "#{rails_env}" }
 
+# Nginx settings
+set :nginx_conf, lambda { "#{full_current_path}/config/nginx.conf" }
+set :nginx_symlink, lambda { "/etc/nginx/sites-enabled/#{application}" }
+
 # Assets settings
 set :precompiled_assets_dir, 'public/assets'
 
@@ -41,7 +45,6 @@ task :reminders do
   system %[echo ""]
 
   invoke 'reminders:before_deploy'
-  invoke 'reminders:after_deploy'
 end
 
 namespace :reminders do
@@ -52,15 +55,6 @@ namespace :reminders do
 
     invoke 'reminders:before_deploy:edit_env'
     invoke 'reminders:before_deploy:add_github_to_known_hosts'
-  end
-
-  task :after_deploy do
-    system %[echo ""]
-    system %[echo "-------- After First Deploy --------"]
-    system %[echo ""]
-
-    invoke 'reminders:after_deploy:symlink_nginx'
-    invoke 'reminders:after_deploy:add_to_puma_jungle'
   end
 
   namespace :before_deploy do
@@ -77,28 +71,6 @@ namespace :reminders do
       system  %[echo "-----> allow you to deploy (otherwise the git clone step will fail)."]
       system  %[echo ""]
       system  %[echo "ssh-keyscan -H github.com >> ~/.ssh/known_hosts"]
-      system  %[echo ""]
-    end
-  end
-
-  namespace :after_deploy do
-    task :symlink_nginx do
-      system  %[echo ""]
-      system  %[echo "-----> Run the following command on your server to create the symlink from the "]
-      system  %[echo "nginx sites-enabled directory to the app's nginx.conf file:"]
-      system  %[echo ""]
-      system  %[echo "sudo ln -nfs #{full_current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"]
-      system  %[echo ""]
-    end
-
-    task :add_to_puma_jungle do
-      system  %[echo ""]
-      system  %[echo "-----> Run the following command on your server to add your app to the list of puma apps in "]
-      system  %[echo "the file /etc/puma.conf. All apps in this file are automatically started"]
-      system  %[echo "whenever the server is booted up. They can also be controlled with the script "]
-      system  %[echo "/etc/init.d/puma (i.e. try running the command '/etc/init.d/puma status')."]
-      system  %[echo ""]
-      system  %[echo "sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}"]
       system  %[echo ""]
     end
   end
@@ -138,10 +110,31 @@ task :setup => :environment do
   queue! %[echo "------------------------- IMPORTANT -------------------------"]
   queue! %[echo ""]
   queue! %[echo "Before deploying for the first time, run 'mina #{stage} reminders'"]
-  queue! %[echo "to see important commands that should be run before and after first deploy"]
+  queue! %[echo "to see important commands that should be run before first deploy"]
   queue! %[echo ""]
   queue! %[echo "------------------------- IMPORTANT -------------------------"]
   queue! %[echo ""]
+end
+
+task :post_setup do
+  invoke :'nginx:create_symlink'
+  invoke :'puma:jungle:add_application'
+end
+
+namespace :nginx do
+  task :create_symlink do |task|
+    system %[echo ""]
+    system %[echo "Creating Nginx symlink: #{nginx_symlink} ===> #{nginx_conf}"]
+    system %[#{sudo_ssh_cmd(task)} 'sudo ln -nfs #{nginx_conf} #{nginx_symlink}']
+    system %[echo ""]
+  end
+
+  task :remove_symlink do |task|
+    system %[echo ""]
+    system %[echo "Removing Nginx symlink: #{nginx_symlink}"]
+    system %[#{sudo_ssh_cmd(task)} 'sudo rm #{nginx_symlink}']
+    system %[echo ""]
+  end
 end
 
 namespace :deploy do
@@ -235,6 +228,22 @@ namespace :puma do
     queue %[echo "-----> Generating new config/puma.rb"]
     queue %[echo '#{conf}' > #{full_shared_path}/config/puma.rb]
   end
+
+  namespace :jungle do
+    task :add_application do |task|
+      system %[echo ""]
+      system %[echo "Adding application to puma jungle at /etc/puma.conf"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}']
+      system %[echo ""]
+    end
+
+    task :remove_application do |task|
+      system %[echo ""]
+      system %[echo "Removing application from puma jungle at /etc/puma.conf"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma remove #{deploy_to}']
+      system %[echo ""]
+    end
+  end
 end
 
 desc "Deploys the current version to the server."
@@ -248,7 +257,7 @@ task :deploy => :environment do
     end
 
     invoke :'deploy:check_revision'
-    system %[echo "Note: If this is the first deploy, run 'mina #{stage} reminders' to view important reminders"]
+    system %[echo "Note: If this is the first deploy, run the following command after you finish: 'mina #{stage} post_setup sudo_user=<username>' (insert a user with sudo access into <username>)"]
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
     invoke :'git:clone'
@@ -266,4 +275,26 @@ task :deploy => :environment do
       invoke :'puma:phased_restart'
     end
   end
+end
+
+private
+
+def sudo_ssh_cmd(task)
+  return "ssh #{get_sudo_user(task)}@#{domain} -t"
+end
+
+def get_sudo_user(task)
+  sudo_user = ENV['sudo_user']
+
+  if !sudo_user
+    system %[echo ""]
+    system %[echo "In order to run this command, please include a 'sudo_user' option set to a user"]
+    system %[echo "that has sudo permissons on the server:"]
+    system %[echo ""]
+    system %[echo "mina #{stage} #{task} sudo_user=<username>"]
+    system %[echo ""]
+    exit
+  end
+
+  return sudo_user
 end
