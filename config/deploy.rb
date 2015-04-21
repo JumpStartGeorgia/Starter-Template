@@ -46,18 +46,21 @@ task :environment do
 end
 
 namespace :rails do
+  desc "Opens the deployed application's .env file in vim so that you can edit application secrets."
   task :edit_env do
     queue %[vim #{shared_env_path}]
   end
 end
 
 namespace :nginx do
+  desc "Generates a new Nginx configuration in the app's shared folder from the local nginx.conf.erb layout."
   task :generate_conf do
     conf = ERB.new(File.read("./config/nginx.conf.erb")).result()
     queue %[echo "-----> Generating new config/nginx.conf"]
     queue %[echo '#{conf}' > #{full_shared_path}/config/nginx.conf]
   end
 
+  desc "Creates a symlink to the app's Nginx configuration in the server's sites-enabled directory."
   task :create_symlink do |task|
     system %[echo ""]
     system %[echo "Creating Nginx symlink: #{nginx_symlink} ===> #{nginx_conf}"]
@@ -65,6 +68,7 @@ namespace :nginx do
     system %[echo ""]
   end
 
+  desc "Removes the symlink to the app's Nginx configuration from the server's sites-enabled directory."
   task :remove_symlink do |task|
     system %[echo ""]
     system %[echo "Removing Nginx symlink: #{nginx_symlink}"]
@@ -72,6 +76,7 @@ namespace :nginx do
     system %[echo ""]
   end
 
+  desc "Starts the Nginx server."
   task :start do |task|
     system %[echo ""]
     system %[echo "Starting Nginx."]
@@ -79,6 +84,7 @@ namespace :nginx do
     system %[echo ""]
   end
 
+  desc "Stops the Nginx server."
   task :stop do |task|
     system %[echo ""]
     system %[echo "Stopping Nginx."]
@@ -86,6 +92,7 @@ namespace :nginx do
     system %[echo ""]
   end
 
+  desc "Checks the status of the Nginx server. Requires sudo_user option."
   task :status do |task|
     system %[echo ""]
     system %[echo "Checking Nginx status."]
@@ -95,6 +102,7 @@ namespace :nginx do
 end
 
 namespace :puma do
+  desc "Generates a new Puma configuration in the app's shared folder from the local puma.rb.erb layout."
   task :generate_conf do
     conf = ERB.new(File.read("./config/puma.rb.erb")).result()
     queue %[echo "-----> Generating new config/puma.rb"]
@@ -102,6 +110,7 @@ namespace :puma do
   end
 
   namespace :jungle do
+    desc "Adds the application to the puma jungle (list of apps controlled by /etc/init.d/puma). Requires sudo_user option."
     task :add do |task|
       system %[echo ""]
       system %[echo "Adding application to puma jungle at /etc/puma.conf"]
@@ -109,6 +118,7 @@ namespace :puma do
       system %[echo ""]
     end
 
+    desc "Removes the application from the puma jungle (list of apps controlled by /etc/init.d/puma). Requires sudo_user option."
     task :remove do |task|
       system %[echo ""]
       system %[echo "Removing application from puma jungle at /etc/puma.conf"]
@@ -116,6 +126,7 @@ namespace :puma do
       system %[echo ""]
     end
 
+    desc "Starts the puma jungle. Requires sudo_user option."
     task :start do |task|
       system %[echo ""]
       system %[echo "Starting all puma jungle applications"]
@@ -123,6 +134,7 @@ namespace :puma do
       system %[echo ""]
     end
 
+    desc "Stops the puma jungle. Requires sudo_user option."
     task :stop do |task|
       system %[echo ""]
       system %[echo "Stopping all puma jungle applications"]
@@ -130,6 +142,7 @@ namespace :puma do
       system %[echo ""]
     end
 
+    desc "Checks the status of the puma jungle. Requires sudo_user option."
     task :status do |task|
       system %[echo ""]
       system %[echo "Checking status of all puma jungle applications"]
@@ -137,6 +150,7 @@ namespace :puma do
       system %[echo ""]
     end
 
+    desc "Restarts the puma jungle. Requires sudo_user option."
     task :restart do |task|
       system %[echo ""]
       system %[echo "Restarting all puma jungle applications"]
@@ -147,6 +161,7 @@ namespace :puma do
 end
 
 namespace :deploy do
+  desc "Ensures that local git repository is clean and in sync with the origin repository used for deploy."
   task :check_revision do
     unless `git rev-parse HEAD` == `git rev-parse origin/#{branch}`
       system %[echo "WARNING: HEAD is not the same as origin/#{branch}"]
@@ -163,6 +178,7 @@ namespace :deploy do
   end
 
   namespace :assets do
+    desc "Decides whether to precompile assets based on whether there have been changes to the assets since last deploy."
     task :decide_whether_to_precompile do
       set :precompile_assets, false
       if ENV['precompile'] == 'true'
@@ -205,6 +221,7 @@ namespace :deploy do
       end
     end
 
+    desc "Precompile assets locally and rsync to tmp/assets folder on server."
     task :local_precompile do
       system %[echo "-----> Cleaning assets locally"]
       system %[bundle exec rake assets:clean RAILS_GROUPS=assets]
@@ -223,6 +240,7 @@ namespace :deploy do
   end
 end
 
+desc "Setup directories and .env file; should be run before first deploy."
 task :setup => :environment do
   capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
@@ -298,6 +316,7 @@ task :deploy => :environment do
   end
 end
 
+desc "Creates Nginx symlink, adds app to puma jungle, and starts and stops Nginx; should be run after first deploy."
 task :post_setup do
   invoke :'nginx:create_symlink'
   invoke :'puma:jungle:add'
@@ -305,12 +324,14 @@ task :post_setup do
   invoke :'nginx:start'
 end
 
+desc "Removes application directory from server, removes nginx symlink, and removes app from puma jungle."
 task :destroy do
   invoke :'remove_application'
   invoke :'nginx:remove_symlink'
   invoke :'puma:jungle:remove'
 end
 
+desc "Removes application directory from server."
 task :remove_application do |task|
   system %[echo ""]
   system %[echo "Removing application at #{deploy_to}"]
