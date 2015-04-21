@@ -330,6 +330,8 @@ end
 task :post_setup do
   invoke :'nginx:create_symlink'
   invoke :'puma:jungle:add'
+  invoke :'nginx:stop'
+  invoke :'nginx:start'
 end
 
 task :destroy do
