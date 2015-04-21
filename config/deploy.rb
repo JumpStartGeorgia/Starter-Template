@@ -304,6 +304,20 @@ task :deploy => :environment do
   end
 end
 
+task :destroy do
+  invoke :'remove_application'
+  invoke :'nginx:remove_symlink'
+  invoke :'puma:jungle:remove_application'
+end
+
+task :remove_application do |task|
+  system %[echo ""]
+  system %[echo "Removing application at #{deploy_to}"]
+  system %[echo "WARNING: DO NOT ENTER sudo password if you're not sure about this."]
+  system %[#{sudo_ssh_cmd(task)} 'sudo rm -rf #{deploy_to}']
+  system %[echo ""]
+end
+
 private
 
 def sudo_ssh_cmd(task)
