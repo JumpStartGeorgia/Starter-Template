@@ -205,13 +205,8 @@ namespace :deploy do
         else
           git_diff = `git diff --name-only #{deployed_commit}..#{current_commit} #{asset_files_directories}`
 
-          # If git diff length is 0, then the assets are unchanged.
-          # If the length is not 0, then one of the following are true:
-          #
-          # 1) The assets changed and git diff shows those files
-          # 2) Git cannot recognize the deployed commit and issues an error
-          #
-          # In both these situations, precompile assets.
+          # If git diff length is not 0, then either 1) the assets have changed or 2) git cannot recognize the deployed
+          # commit and issues an error. In both these situations, precompile assets.
           if git_diff.length == 0
             system %[echo "-----> Assets unchanged; skipping precompile assets"]
           else
