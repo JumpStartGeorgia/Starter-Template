@@ -250,6 +250,34 @@ namespace :puma do
       system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma remove #{deploy_to}']
       system %[echo ""]
     end
+
+    task :start do |task|
+      system %[echo ""]
+      system %[echo "Starting all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma start']
+      system %[echo ""]
+    end
+
+    task :stop do |task|
+      system %[echo ""]
+      system %[echo "Stopping all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma stop']
+      system %[echo ""]
+    end
+
+    task :status do |task|
+      system %[echo ""]
+      system %[echo "Checking status of all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma status']
+      system %[echo ""]
+    end
+
+    task :restart do |task|
+      system %[echo ""]
+      system %[echo "Restarting all puma jungle applications"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma restart']
+      system %[echo ""]
+    end
   end
 end
 
