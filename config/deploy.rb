@@ -260,6 +260,10 @@ task :setup => :environment do
     queue! %[echo ""]
     queue! %[echo "mina #{stage} rails:edit_env"]
     queue! %[echo ""]
+    queue! %[echo "Then deploy for the first time like this:"]
+    queue! %[echo ""]
+    queue! %[echo "mina #{stage} deploy first_deploy=true"]
+    queue! %[echo ""]
     queue! %[echo "------------------------- IMPORTANT -------------------------"]
     queue! %[echo ""]
   end
