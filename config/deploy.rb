@@ -33,6 +33,10 @@ set :nginx_symlink, lambda { "/etc/nginx/sites-enabled/#{application}" }
 # Assets settings
 set :precompiled_assets_dir, 'public/assets'
 
+# Rails settings
+set :temp_env_example_path, lambda { "#{user_path}/.env.example-#{application}" }
+set :shared_env_path, lambda { "#{full_shared_path}/.env" }
+
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
 task :environment do
@@ -77,9 +81,6 @@ namespace :reminders do
 end
 
 task :setup => :environment do
-  temp_env_example_path = "#{user_path}/.env.example-#{application}"
-  shared_env_path = "#{full_shared_path}/.env"
-
   capture(%[ls #{full_shared_path}/.env]).split(" ")[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
   unless env_exists
@@ -104,16 +105,16 @@ task :setup => :environment do
   unless env_exists
     queue! %[echo "Moving copy of local .env.example to #{shared_env_path}"]
     queue! %[mv #{temp_env_example_path} #{shared_env_path}]
+    queue! %[echo ""]
+    queue! %[echo "------------------------- IMPORTANT -------------------------"]
+    queue! %[echo ""]
+    queue! %[echo "Run the following command and add your secrets to the .env file:"]
+    queue! %[echo ""]
+    queue! %[echo "mina #{stage} rails:edit_env"]
+    queue! %[echo ""]
+    queue! %[echo "------------------------- IMPORTANT -------------------------"]
+    queue! %[echo ""]
   end
-
-  queue! %[echo ""]
-  queue! %[echo "------------------------- IMPORTANT -------------------------"]
-  queue! %[echo ""]
-  queue! %[echo "Before deploying for the first time, run 'mina #{stage} reminders'"]
-  queue! %[echo "to see important commands that should be run before first deploy"]
-  queue! %[echo ""]
-  queue! %[echo "------------------------- IMPORTANT -------------------------"]
-  queue! %[echo ""]
 end
 
 task :post_setup do
@@ -134,6 +135,12 @@ namespace :nginx do
     system %[echo "Removing Nginx symlink: #{nginx_symlink}"]
     system %[#{sudo_ssh_cmd(task)} 'sudo rm #{nginx_symlink}']
     system %[echo ""]
+  end
+end
+
+namespace :rails do
+  task :edit_env do
+    queue %[vim #{shared_env_path}]
   end
 end
 
