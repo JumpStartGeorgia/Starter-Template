@@ -325,11 +325,13 @@ task :post_setup do
   invoke :'nginx:start'
 end
 
-desc "Removes application directory from server, removes nginx symlink, and removes app from puma jungle."
+desc "Removes application directory from server, removes nginx symlink, removes app from puma jungle and restarts nginx."
 task :destroy do
   invoke :'remove_application'
   invoke :'nginx:remove_symlink'
   invoke :'puma:jungle:remove'
+  invoke :'nginx:stop'
+  invoke :'nginx:start'
 end
 
 desc "Removes application directory from server."
