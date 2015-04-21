@@ -262,7 +262,7 @@ task :setup => :environment do
     queue! %[echo ""]
     queue! %[echo "Then deploy for the first time like this:"]
     queue! %[echo ""]
-    queue! %[echo "mina #{stage} deploy first_deploy=true"]
+    queue! %[echo "mina #{stage} deploy first_deploy=true --verbose"]
     queue! %[echo ""]
     queue! %[echo "------------------------- IMPORTANT -------------------------"]
     queue! %[echo ""]
@@ -283,7 +283,7 @@ task :deploy => :environment do
       set :bundle_options, "#{bundle_options} --quiet"
     end
 
-    #invoke :'deploy:check_revision'
+    invoke :'deploy:check_revision'
     invoke :'deploy:assets:decide_whether_to_precompile'
     invoke :'deploy:assets:local_precompile' if precompile_assets
     invoke :'git:clone'
