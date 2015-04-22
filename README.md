@@ -18,14 +18,9 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 
 ### Setup
 
-1. Add your stage-specific deploy variables to the files in config/deploy.
-2. Add the following lines to config/environments/development.rb:
+Add your stage-specific deploy variables to the files in config/deploy.
 
-```
-# Rake precompile task puts precompiled assets in this directory in the public folder.
-# Necessary for custom mina assets deploy setup.
-config.assets.prefix = "/assets"
-```
+### Commands
 
 ### Deploy
 
@@ -46,3 +41,22 @@ config.assets.prefix = "/assets"
 
 Note: If you wish to remove your application from the server, run `mina destroy sudo_user=<username>`, where <username> is a user with sudo permissions on your server.
 
+#### Options (mina deploy <options>)
+
+[precompile=true]  forces precompile assets
+[verbose=true]            outputs more information (default is quieter and prettier)
+
+### Precompile Assets Method
+
+Unlike in the standard Mina deploy, assets are precompiled locally and rsynced up to the server in this starter-template. The method is as follows:
+
+1. Determine whether to precompile the assets
+   a. If the flag 'precompile=true' is set, then precompile assets
+   b. Use git to view difference in the assets files between the commit on the server
+      and the commit on the local machine. If there is a difference, precompile assets
+   c. If cannot determine the commit on the server, show error and ask user to run deploy with 'precompile=true'
+   d. If git diff gives an error, precompile assets
+2. If not precompiling assets, skip to step 3. Otherwise...
+   a. precompile assets locally
+   b. sync tmp/assets on server with local precompiled assets
+3. During deploy, copy assets from tmp/assets to current/public/assets
