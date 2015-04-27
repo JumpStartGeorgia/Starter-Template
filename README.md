@@ -20,8 +20,6 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 
 Add your stage-specific deploy variables to the files in config/deploy.
 
-### Commands
-
 ### Deploy
 
 1. Run `mina setup`
@@ -33,18 +31,20 @@ Add your stage-specific deploy variables to the files in config/deploy.
       - Adds github to user’s known hosts
     - `ssh-keyscan -H github.com >> etc/ssh/ssh_known_hosts`
       - Adds github to known hosts for all users
-4. Run `mina post_setup sudo_user=<username>`, where <username> is a user with sudo permissions on your server. You will need to enter the user’s password a number of times to execute the sudo commands.
+4. Run `mina post_setup sudo_user=<username>`, where `<username>` is a user with sudo permissions on your server. You will need to enter the user’s password a number of times to execute the sudo commands.
 5. Deploy further changes with `mina deploy` or `mina deploy --verbose`
 6. Repeat these steps for your other stages, simply by inserting the stage name into the command after `mina`. Examples:
   - `mina setup` --> `mina production setup`
   - `mina deploy precompile=true --verbose` --> `mina production deploy precompile=true --verbose`
 
-Note: If you wish to remove your application from the server, run `mina destroy sudo_user=<username>`, where <username> is a user with sudo permissions on your server.
-
 #### Options (mina deploy <options>)
 
 [precompile=true]  forces precompile assets
 [verbose=true]            outputs more information (default is quieter and prettier)
+
+### Commands
+
+Run `mina -T` for a list of mina's commands.
 
 ### Precompile Assets Method
 
