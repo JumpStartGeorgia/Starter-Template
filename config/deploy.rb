@@ -157,6 +157,14 @@ namespace :puma do
       system %[#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma restart']
       system %[echo ""]
     end
+
+    desc "Lists the apps in the puma jungle (outputs /etc/puma.conf). Requires sudo_user option."
+    task :list do |task|
+      system %[echo ""]
+      system %[echo "Listing all apps in puma jungle"]
+      system %[#{sudo_ssh_cmd(task)} 'sudo cat /etc/puma.conf']
+      system %[echo ""]
+    end
   end
 end
 
