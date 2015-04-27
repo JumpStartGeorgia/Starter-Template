@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '~> 5.0.3'
 gem "paperclip", "~> 4.2.0"
 gem 'formtastic', "~> 3.1.3"
 gem 'therubyracer', '~> 0.12.1'
-gem 'less-rails', '~> 2.6.0'
+gem 'less-rails', '~> 2.7.0'
 gem 'twitter-bootstrap-rails', '~> 3.2.0'
 gem 'formtastic-bootstrap', '~> 3.1.0'
 gem 'devise', '~> 3.4.1'
