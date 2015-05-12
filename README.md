@@ -60,3 +60,17 @@ Unlike in the standard Mina deploy, assets are precompiled locally and rsynced u
    a. precompile assets locally
    b. sync tmp/assets on server with local precompiled assets
 3. During deploy, copy assets from tmp/assets to current/public/assets
+
+### Puma Jungle (Controlling Multiple Puma Apps)
+
+Setting up the Puma Jungle on the server allows you to run commands such as start, stop, status, etc. for multiple puma apps at one time. You can also configure it to restart all apps whenever the server reboots.
+
+In order to setup the jungle, follow [these steps](https://github.com/puma/puma/tree/master/tools/jungle/init.d). You may have to modify the default scripts to work on your server; if things don't work out of the box, try consulting [this guide](http://dev.mensfeld.pl/2014/02/puma-jungle-script-fully-working-with-rvm-and-pumactl/).
+
+If your primary puma jungle script is stored at the default location `/etc/init.d/puma`, here are some commands you can use (you may have to run with sudo):
+ - `/etc/init.d/puma start`
+ - `/etc/init.d/puma stop`
+ - `/etc/init.d/puma status`
+ - `/etc/init.d/puma restart`
+
+This starter template provides access to the puma jungle through mina commands, such as `mina puma:jungle:start`. Run `mina -T puma:jungle` to see all these commands.
