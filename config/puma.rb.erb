@@ -12,7 +12,7 @@ stdout_redirect "<%= puma_error_log %>", "<%= puma_access_log %>", true
 
 
 
-threads 4,16
+threads 2,4
 
 bind "unix://<%= puma_socket %>"
 workers 1
