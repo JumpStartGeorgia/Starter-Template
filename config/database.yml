@@ -8,24 +8,24 @@ default: &default
 
 development:
     <<: *default
-    database: <%= ENV["DEVELOPMENT_DB"] %>
-    username: <%= ENV["DEVELOPMENT_DB_USERNAME"] %>
-    password: <%= ENV["DEVELOPMENT_DB_PASSWORD"] %>
-
-test:
-    <<: *default
-    database: <%= ENV["TEST_DB"] %>
-    username: <%= ENV["TEST_DB_USERNAME"] %>
-    password: <%= ENV["TEST_DB_PASSWORD"] %>
+    database: <%= ENV["DB_NAME"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASSWORD"] %>
 
 staging:
     <<: *default
-    database: <%= ENV["STAGING_DB"] %>
-    username: <%= ENV["STAGING_DB_USERNAME"] %>
-    password: <%= ENV["STAGING_DB_PASSWORD"] %>
+    database: <%= ENV["DB_NAME"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASSWORD"] %>
 
 production:
     <<: *default
-    database: <%= ENV["PRODUCTION_DB"] %>
-    username: <%= ENV["PRODUCTION_DB_USERNAME"] %>
-    password: <%= ENV["PRODUCTION_DB_PASSWORD"] %>
+    database: <%= ENV["DB_NAME"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASSWORD"] %>
+
+test:
+    <<: *default
+    database: <%= ENV["TEST_DB_NAME"] %>
+    username: <%= ENV["TEST_DB_USER"] %>
+    password: <%= ENV["TEST_DB_PASSWORD"] %>
