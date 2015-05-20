@@ -24,6 +24,9 @@ gem 'cancancan', '~> 1.10.1'
 
 group :development do
   gem 'quiet_assets', '~> 1.0.3'
+  gem 'pry-byebug', '~> 3.1.0'
+  gem 'rack-mini-profiler', '~> 0.9.3', require: false
+  gem 'flamegraph', '~> 0.1.0'
   gem 'mina', '~> 0.3.3', require: false
   gem 'mina-puma', '~> 0.2.0', require: false
   gem 'mina-multistage', '~> 1.0.1', require: false
