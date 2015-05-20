@@ -22,7 +22,6 @@ gem 'cancancan', '~> 1.10.1'
 
 group :development do
   gem 'quiet_assets', '~> 1.0.3'
-  gem 'pry-byebug', '~> 3.1.0'
   gem 'rack-mini-profiler', '~> 0.9.3', require: false
   gem 'flamegraph', '~> 0.1.0'
   gem 'stackprof', '~> 0.2.7'
@@ -34,6 +33,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'pry-byebug', '~> 3.1.0'
   gem 'web-console', '~> 2.0'
   gem 'spring', '~> 1.3.5'
   gem 'rspec-rails', '~> 3.1.0'
