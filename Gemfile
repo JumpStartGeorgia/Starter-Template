@@ -6,15 +6,13 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails', '~> 4.0.3'
 gem 'turbolinks', '~> 2.5.3'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
-# Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 gem 'dotenv-rails', '~> 2.0.0'
 gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 5.0.3'
-gem "paperclip", "~> 4.2.0"
-gem 'formtastic', "~> 3.1.3"
+gem 'paperclip', '~> 4.2.0'
+gem 'formtastic', '~> 3.1.3'
 gem 'therubyracer', '~> 0.12.1'
 gem 'less-rails', '~> 2.7.0'
 gem 'twitter-bootstrap-rails', '~> 3.2.0'
@@ -34,12 +32,8 @@ group :development do
 end
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-  # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '~> 1.3.5'
   gem 'rspec-rails', '~> 3.1.0'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'rack-test', '0.6.2'
