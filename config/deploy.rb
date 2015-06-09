@@ -235,7 +235,11 @@ namespace :deploy do
       system %(bundle exec rake assets:precompile RAILS_GROUPS=assets)
 
       system %[echo "-----> RSyncing remote assets (tmp/assets) with local assets (#{precompiled_assets_dir})"]
-      system %(rsync #{rsync_verbose} --recursive --times ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
+      if port.nil?
+        system %(rsync #{rsync_verbose} --recursive --times ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
+      else
+        system %(rsync #{rsync_verbose} -e 'ssh -p #{port}' --recursive --times --delete ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
+      end
     end
 
     task :copy do
@@ -354,7 +358,9 @@ end
 private
 
 def sudo_ssh_cmd(task)
-  "ssh #{get_sudo_user(task)}@#{domain} -t"
+  command = "ssh #{get_sudo_user(task)}@#{domain} -t"
+  command += " -p #{port}" if !port.nil?
+  command
 end
 
 def get_sudo_user(task)
