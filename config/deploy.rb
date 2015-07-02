@@ -17,6 +17,7 @@ set :forward_agent, true
 set :rails_env, -> { "#{stage}" }
 set :robots_path, -> { "#{full_current_path}/public/robots.txt" }
 set_default :visible_to_robots, true
+set_default :repo_branch, 'master'
 
 # Puma settings
 set :web_server, :puma
