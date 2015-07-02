@@ -1,6 +1,5 @@
 require 'erb'
 require 'mina/multistage'
-require 'mina/puma'
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
@@ -11,26 +10,37 @@ set :deploy_to, -> { "#{user_path}/#{application}" }
 set :full_current_path, -> { "#{deploy_to}/#{current_path}" }
 set :full_shared_path, -> { "#{deploy_to}/#{shared_path}" }
 set :full_tmp_path, -> { "#{deploy_to}/tmp" }
-set :branch, 'master'
+set :branch, -> { "#{repo_branch}" }
 set :initial_directories, -> { ["#{full_shared_path}/log", "#{full_shared_path}/config", "#{full_shared_path}/public/system", "#{full_tmp_path}/puma/sockets", "#{full_tmp_path}/assets"] }
 set :shared_paths, %w(.env log public/system)
 set :forward_agent, true
 set :rails_env, -> { "#{stage}" }
+set :robots_path, -> { "#{full_current_path}/public/robots.txt" }
+set_default :visible_to_robots, true
 
 # Puma settings
+set :web_server, :puma
+set :puma_role, -> { user }
 set :puma_socket, -> { "#{deploy_to}/tmp/puma/sockets/puma.sock" }
 set :puma_pid, -> { "#{deploy_to}/tmp/puma/pid" }
 set :puma_state, -> { "#{deploy_to}/tmp/puma/state" }
 set :pumactl_socket, -> { "#{deploy_to}/tmp/puma/sockets/pumactl.sock" }
-set :puma_config, -> { "#{full_shared_path}/config/puma.rb" }
+set :puma_conf, -> { "#{full_current_path}/config/puma.rb" }
+set :puma_cmd,       -> { "#{bundle_prefix} puma" }
+set :pumactl_cmd,    -> { "#{bundle_prefix} pumactl" }
 set :puma_error_log, -> { "#{full_shared_path}/log/puma.error.log" }
 set :puma_access_log, -> { "#{full_shared_path}/log/puma.access.log" }
 set :puma_log, -> { "#{full_shared_path}/log/puma.log" }
 set :puma_env, -> { "#{rails_env}" }
+set :puma_port, '9292'
 
 # Nginx settings
-set :nginx_conf, -> { "#{full_shared_path}/config/nginx.conf" }
+set :nginx_conf, -> { "#{full_current_path}/config/nginx.conf" }
 set :nginx_symlink, -> { "/etc/nginx/sites-enabled/#{application}" }
+
+# SSL settings
+set :ssl_key, -> { "/etc/sslmate/#{web_url}.key" }
+set :ssl_cert, -> { "/etc/sslmate/#{web_url}.chained.crt" }
 
 # Assets settings
 set :precompiled_assets_dir, 'public/assets'
@@ -38,6 +48,9 @@ set :precompiled_assets_dir, 'public/assets'
 # Rails settings
 set :temp_env_example_path, -> { "#{user_path}/.env.example-#{application}" }
 set :shared_env_path, -> { "#{full_shared_path}/.env" }
+
+# Fetch Head location: this file contains the currently deployed git commit hash
+set :fetch_head, -> { "#{deploy_to}/scm/FETCH_HEAD" }
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
@@ -50,14 +63,70 @@ namespace :rails do
   task :edit_env do
     queue %(vim #{shared_env_path})
   end
+
+  desc 'Creates new robots.txt on server from robots.txt.erb template'
+  task :generate_robots do
+    robots = ERB.new(File.read('./config/robots.txt.erb')).result
+    queue %(echo "-----> Generating new public/robots.txt")
+
+    queue %(
+    PWD="$(pwd)"
+    if [ $PWD = #{user_path} ]; then
+      echo "-----> Copying new robots.txt to: #{robots_path}"
+      echo '#{robots}' > #{robots_path};
+    else
+      echo "-----> Copying new puma.rb to: $PWD/public/robots.txt"
+      echo '#{robots}' > ./public/robots.txt;
+    fi
+    )
+  end
+
+  namespace :log do
+    desc "Tail a log file; set `lines` to number of lines and `log` to log file name; example: 'mina rails:log lines=100 log=production.log'"
+    task :tail do
+      ENV['n'] ||= '10'
+      ENV['f'] ||= "#{stage}.log"
+
+      puts "Tailing file #{ENV['f']}; showing last #{ENV['n']} lines"
+      queue %(tail -n #{ENV['n']} -f #{full_current_path}/log/#{ENV['f']})
+    end
+
+    desc 'List all log files'
+    task :list do
+      queue %(ls -la #{full_current_path}/log/)
+    end
+  end
 end
 
 namespace :nginx do
   desc "Generates a new Nginx configuration in the app's shared folder from the local nginx.conf.erb layout."
   task :generate_conf do
-    conf = ERB.new(File.read('./config/nginx.conf.erb')).result
-    queue %(echo "-----> Generating new config/nginx.conf")
-    queue %(echo '#{conf}' > #{full_shared_path}/config/nginx.conf)
+    conf = if use_ssl
+             queue %(echo "-----> Generating SSL Nginx Config file")
+             ERB.new(File.read('./config/nginx_ssl.conf.erb')).result
+           else
+             queue %(echo "-----> Generating Non-SSL Nginx Config file")
+             ERB.new(File.read('./config/nginx.conf.erb')).result
+    end
+
+    queue %(
+    PWD="$(pwd)"
+    if [ $PWD = #{user_path} ]; then
+      echo "-----> Copying new nginx.conf to: #{nginx_conf}"
+      echo '#{conf}' > #{nginx_conf};
+    else
+      echo "-----> Copying new nginx.conf to: $PWD/config/nginx.conf"
+      echo '#{conf}' > ./config/nginx.conf;
+    fi
+    )
+  end
+
+  desc 'Tests all Nginx configuration files for validity.'
+  task :test do |task|
+    system %(echo "")
+    system %(echo "Testing Nginx configuration files for validity")
+    system %(#{sudo_ssh_cmd(task)} 'sudo nginx -t')
+    system %(echo "")
   end
 
   desc "Creates a symlink to the app's Nginx configuration in the server's sites-enabled directory."
@@ -106,7 +175,79 @@ namespace :puma do
   task :generate_conf do
     conf = ERB.new(File.read('./config/puma.rb.erb')).result
     queue %(echo "-----> Generating new config/puma.rb")
-    queue %(echo '#{conf}' > #{full_shared_path}/config/puma.rb)
+
+    queue %(
+    PWD="$(pwd)"
+    if [ $PWD = #{user_path} ]; then
+      echo "-----> Copying new puma.rb to: #{puma_conf}"
+      echo '#{conf}' > #{puma_conf};
+    else
+      echo "-----> Copying new puma.rb to: $PWD/config/puma.rb"
+      echo '#{conf}' > ./config/puma.rb;
+    fi
+    )
+  end
+
+  desc 'Start puma'
+  task start: :environment do
+    queue! %(
+      if [ -e '#{pumactl_socket}' ]; then
+        echo 'Puma is already running!';
+      else
+        cd #{deploy_to}/#{current_path} && #{puma_cmd} -q -d -e #{puma_env} -C #{puma_conf}
+      fi
+        )
+  end
+
+  desc 'Stop puma'
+  task stop: :environment do
+    queue! %(
+      if [ -e '#{pumactl_socket}' ]; then
+        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} stop
+        rm -f '#{pumactl_socket}'
+      else
+        echo 'Puma is not running!';
+      fi
+        )
+  end
+
+  desc 'Restart puma'
+  task restart: :environment do
+    invoke :'puma:stop'
+    invoke :'puma:start'
+  end
+
+  desc 'Restart puma (phased restart)'
+  task phased_restart: :environment do
+    queue! %(
+      if [ -e '#{pumactl_socket}' ]; then
+        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} phased-restart
+      else
+        echo 'Puma is not running!';
+      fi
+        )
+  end
+
+  desc 'View status of puma server'
+  task status: :environment do
+    queue! %(
+      if [ -e '#{pumactl_socket}' ]; then
+        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} status
+      else
+        echo 'Puma is not running!';
+      fi
+        )
+  end
+
+  desc 'View information about puma server'
+  task stats: :environment do
+    queue! %(
+      if [ -e '#{pumactl_socket}' ]; then
+        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} stats
+      else
+        echo 'Puma is not running!';
+      fi
+        )
   end
 
   namespace :jungle do
@@ -114,7 +255,7 @@ namespace :puma do
     task :add do |task|
       system %(echo "")
       system %(echo "Adding application to puma jungle at /etc/puma.conf")
-      system %(#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_config} #{puma_log}')
+      system %(#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} #{user} #{puma_conf} #{puma_log}')
       system %(echo "")
     end
 
@@ -168,6 +309,16 @@ namespace :puma do
   end
 end
 
+namespace :git do
+  desc 'Remove FETCH_HEAD file containing currently deployed git commit hash; this will force user to precompile on next deploy'
+  task :remove_fetch_head do
+    queue! %(
+      echo '-----> Removing #{fetch_head}'
+      rm #{fetch_head}
+        )
+  end
+end
+
 namespace :deploy do
   desc 'Ensures that local git repository is clean and in sync with the origin repository used for deploy.'
   task :check_revision do
@@ -185,6 +336,15 @@ namespace :deploy do
     end
   end
 
+  desc 'Stops puma server, rolls back to previous deploy, and starts puma server'
+  task :custom_rollback do
+    invoke :'puma:stop'
+    invoke :'deploy:rollback'
+    invoke :'puma:start'
+    invoke :'deploy:assets:copy_current_to_tmp'
+    invoke :'git:remove_fetch_head'
+  end
+
   namespace :assets do
     desc 'Decides whether to precompile assets based on whether there have been changes to the assets since last deploy.'
     task :decide_whether_to_precompile do
@@ -198,7 +358,7 @@ namespace :deploy do
         current_commit = `git rev-parse HEAD`.strip
 
         # Get deployed commit hash
-        deployed_commit = capture(%(cat #{deploy_to}/scm/FETCH_HEAD)).split(' ')[0]
+        deployed_commit = capture(%(cat #{fetch_head})).split(' ')[0]
 
         # If FETCH_HEAD file does not exist or deployed_commit doesn't look like a hash, ask user to force precompile
         if deployed_commit.nil? || deployed_commit.length != 40
@@ -207,7 +367,7 @@ namespace :deploy do
           system %(echo "")
           system %(echo "mina #{stage} deploy first_deploy=true --verbose")
           system %(echo "")
-          system %(echo "To skip this error and force precompile, deploy like this:")
+          system %(echo "If not, you can force precompile like this:")
           system %(echo "")
           system %(echo "mina #{stage} deploy precompile=true --verbose")
           system %(echo "")
@@ -242,9 +402,15 @@ namespace :deploy do
       end
     end
 
-    task :copy do
+    task :copy_tmp_to_current do
       queue %(echo "-----> Copying assets from tmp/assets to current/#{precompiled_assets_dir}")
       queue %(cp -a #{deploy_to}/tmp/assets/. ./#{precompiled_assets_dir})
+    end
+
+    task :copy_current_to_tmp do
+      queue %(echo "-----> Replacing tmp/assets with current/#{precompiled_assets_dir}")
+      queue %(rm -r #{deploy_to}/tmp/assets)
+      queue %(cp -a #{full_current_path}/#{precompiled_assets_dir}/. #{deploy_to}/tmp/assets)
     end
   end
 end
@@ -306,9 +472,10 @@ task deploy: :environment do
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
-    invoke :'deploy:assets:copy'
+    invoke :'deploy:assets:copy_tmp_to_current'
     invoke :'nginx:generate_conf'
     invoke :'puma:generate_conf'
+    invoke :'rails:generate_robots'
     invoke :'deploy:cleanup'
 
     to :launch do
@@ -327,7 +494,8 @@ task deploy: :environment do
         queue! %(echo "------------------------- IMPORTANT -------------------------")
         queue! %(echo "")
       else
-        invoke :'puma:phased_restart'
+        invoke :'puma:stop'
+        invoke :'puma:start'
       end
     end
   end
