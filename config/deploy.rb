@@ -10,6 +10,7 @@ set :deploy_to, -> { "#{user_path}/#{application}" }
 set :full_current_path, -> { "#{deploy_to}/#{current_path}" }
 set :full_shared_path, -> { "#{deploy_to}/#{shared_path}" }
 set :full_tmp_path, -> { "#{deploy_to}/tmp" }
+set_default :repo_branch, 'master'
 set :branch, -> { "#{repo_branch}" }
 set :initial_directories, -> { ["#{full_shared_path}/log", "#{full_shared_path}/config", "#{full_shared_path}/public/system", "#{full_tmp_path}/puma/sockets", "#{full_tmp_path}/assets"] }
 set :shared_paths, %w(.env log public/system)
@@ -17,7 +18,6 @@ set :forward_agent, true
 set :rails_env, -> { "#{stage}" }
 set :robots_path, -> { "#{full_current_path}/public/robots.txt" }
 set_default :visible_to_robots, true
-set_default :repo_branch, 'master'
 
 # Puma settings
 set :web_server, :puma
