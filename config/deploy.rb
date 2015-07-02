@@ -254,7 +254,11 @@ task setup: :environment do
   capture(%(ls #{full_shared_path}/.env)).split(' ')[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
   unless env_exists
-    system %(scp .env.example #{user}@#{domain}:#{temp_env_example_path})
+    if port.nil?
+      system %(scp .env.example #{user}@#{domain}:#{temp_env_example_path})
+    else
+      system %(scp -P #{port} .env.example #{user}@#{domain}:#{temp_env_example_path})
+    end
   end
 
   initial_directories.each do |dir|
