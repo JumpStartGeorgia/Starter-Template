@@ -140,8 +140,6 @@ GEM
       rake
     mina-multistage (1.0.1)
       mina (>= 0.2.1)
-    mina-puma (0.2.0)
-      mina
     mini_portile (0.6.2)
     minitest (5.6.0)
     multi_json (1.11.0)
@@ -293,7 +291,6 @@ DEPENDENCIES
   less-rails (~> 2.7.0)
   mina (~> 0.3.3)
   mina-multistage (~> 1.0.1)
-  mina-puma (~> 0.2.0)
   mysql2 (~> 0.3.18)
   paperclip (~> 4.2.0)
   pry-byebug (~> 3.1.0)
