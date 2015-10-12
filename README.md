@@ -8,6 +8,15 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 
 ## Usage
 
+Copy and run in terminal (or see below for command explanations):
+
+```
+git remote add template git@github.com:JumpStartGeorgia/Starter-Template.git
+git remote set-url template no_push --push
+git fetch template
+git merge template/master
+```
+
 1. Add the Starter Template to your Rails project as a remote repository called "template": `git remote add template git@github.com:JumpStartGeorgia/Starter-Template.git`
 2. Disable push connection to template repository: `git remote set-url template no_push --push`
 3. Run `git fetch template` to update local copy of template repository.
