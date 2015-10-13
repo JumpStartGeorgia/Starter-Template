@@ -62,7 +62,7 @@ end
 namespace :rails do
   desc "Opens the deployed application's .env file in vim so that you can edit application secrets."
   task :edit_env do
-    queue %(vim #{shared_env_path})
+    queue! %(vim #{shared_env_path})
   end
 
   desc 'Creates new robots.txt on server from robots.txt.erb template'
@@ -89,12 +89,12 @@ namespace :rails do
       ENV['f'] ||= "#{stage}.log"
 
       puts "Tailing file #{ENV['f']}; showing last #{ENV['n']} lines"
-      queue %(tail -n #{ENV['n']} -f #{full_current_path}/log/#{ENV['f']})
+      queue! %(tail -n #{ENV['n']} -f #{full_current_path}/log/#{ENV['f']})
     end
 
     desc 'List all log files'
     task :list do
-      queue %(ls -la #{full_current_path}/log/)
+      queue! %(ls -la #{full_current_path}/log/)
     end
   end
 end
@@ -191,7 +191,7 @@ namespace :puma do
 
   desc 'Start puma'
   task start: :environment do
-    queue! %(
+    queue %(
       if [ -e '#{pumactl_socket}' ]; then
         echo 'Puma is already running!';
       else
@@ -202,7 +202,7 @@ namespace :puma do
 
   desc 'Stop puma'
   task stop: :environment do
-    queue! %(
+    queue %(
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} stop
         rm -f '#{pumactl_socket}'
@@ -220,7 +220,7 @@ namespace :puma do
 
   desc 'Restart puma (phased restart)'
   task phased_restart: :environment do
-    queue! %(
+    queue %(
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} phased-restart
       else
@@ -231,7 +231,7 @@ namespace :puma do
 
   desc 'View status of puma server'
   task status: :environment do
-    queue! %(
+    queue %(
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} status
       else
@@ -242,7 +242,7 @@ namespace :puma do
 
   desc 'View information about puma server'
   task stats: :environment do
-    queue! %(
+    queue %(
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} stats
       else
@@ -313,7 +313,7 @@ end
 namespace :git do
   desc 'Remove FETCH_HEAD file containing currently deployed git commit hash; this will force user to precompile on next deploy'
   task :remove_fetch_head do
-    queue! %(
+    queue %(
       echo '-----> Removing #{fetch_head}'
       rm #{fetch_head}
         )
@@ -405,13 +405,13 @@ namespace :deploy do
 
     task :copy_tmp_to_current do
       queue %(echo "-----> Copying assets from tmp/assets to current/#{precompiled_assets_dir}")
-      queue %(cp -a #{deploy_to}/tmp/assets/. ./#{precompiled_assets_dir})
+      queue! %(cp -a #{deploy_to}/tmp/assets/. ./#{precompiled_assets_dir})
     end
 
     task :copy_current_to_tmp do
       queue %(echo "-----> Replacing tmp/assets with current/#{precompiled_assets_dir}")
-      queue %(rm -r #{deploy_to}/tmp/assets)
-      queue %(cp -a #{full_current_path}/#{precompiled_assets_dir}/. #{deploy_to}/tmp/assets)
+      queue! %(rm -r #{deploy_to}/tmp/assets)
+      queue! %(cp -a #{full_current_path}/#{precompiled_assets_dir}/. #{deploy_to}/tmp/assets)
     end
   end
 end
@@ -434,21 +434,21 @@ task setup: :environment do
   end
 
   unless env_exists
-    queue! %(echo "Moving copy of local .env.example to #{shared_env_path}")
+    queue %(echo "Moving copy of local .env.example to #{shared_env_path}")
     queue! %(mv #{temp_env_example_path} #{shared_env_path})
-    queue! %(echo "")
-    queue! %(echo "------------------------- IMPORTANT -------------------------")
-    queue! %(echo "")
-    queue! %(echo "Run the following command and add your secrets to the .env file:")
-    queue! %(echo "")
-    queue! %(echo "mina #{stage} rails:edit_env")
-    queue! %(echo "")
-    queue! %(echo "Then deploy for the first time like this:")
-    queue! %(echo "")
-    queue! %(echo "mina #{stage} deploy first_deploy=true --verbose")
-    queue! %(echo "")
-    queue! %(echo "------------------------- IMPORTANT -------------------------")
-    queue! %(echo "")
+    queue %(echo "")
+    queue %(echo "------------------------- IMPORTANT -------------------------")
+    queue %(echo "")
+    queue %(echo "Run the following command and add your secrets to the .env file:")
+    queue %(echo "")
+    queue %(echo "mina #{stage} rails:edit_env")
+    queue %(echo "")
+    queue %(echo "Then deploy for the first time like this:")
+    queue %(echo "")
+    queue %(echo "mina #{stage} deploy first_deploy=true --verbose")
+    queue %(echo "")
+    queue %(echo "------------------------- IMPORTANT -------------------------")
+    queue %(echo "")
   end
 end
 
@@ -480,20 +480,20 @@ task deploy: :environment do
     invoke :'deploy:cleanup'
 
     to :launch do
-      queue "mkdir -p #{full_current_path}/tmp/"
-      queue "touch #{full_current_path}/tmp/restart.txt"
+      queue! "mkdir -p #{full_current_path}/tmp/"
+      queue! "touch #{full_current_path}/tmp/restart.txt"
       if first_deploy
         invoke :'puma:start'
-        queue! %(echo "")
-        queue! %(echo "------------------------- IMPORTANT -------------------------")
-        queue! %(echo "")
-        queue! %(echo "As this is the first deploy, you need to run the following command:")
-        queue! %[echo "(Insert a user with sudo access into <username>)"]
-        queue! %(echo "")
-        queue! %(echo "mina #{stage} post_setup sudo_user=<username>")
-        queue! %(echo "")
-        queue! %(echo "------------------------- IMPORTANT -------------------------")
-        queue! %(echo "")
+        queue %(echo "")
+        queue %(echo "------------------------- IMPORTANT -------------------------")
+        queue %(echo "")
+        queue %(echo "As this is the first deploy, you need to run the following command:")
+        queue %[echo "(Insert a user with sudo access into <username>)"]
+        queue %(echo "")
+        queue %(echo "mina #{stage} post_setup sudo_user=<username>")
+        queue %(echo "")
+        queue %(echo "------------------------- IMPORTANT -------------------------")
+        queue %(echo "")
       else
         invoke :'puma:stop'
         invoke :'puma:start'
