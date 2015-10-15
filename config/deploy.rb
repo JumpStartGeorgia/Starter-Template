@@ -389,10 +389,10 @@ namespace :deploy do
     desc 'Precompile assets locally and rsync to tmp/assets folder on server.'
     task :local_precompile do
       system %(echo "-----> Cleaning assets locally")
-      system %(bundle exec rake assets:clean RAILS_GROUPS=assets)
+      system %(RAILS_ENV=#{rails_env} bundle exec rake assets:clean RAILS_GROUPS=assets)
 
       system %(echo "-----> Precompiling assets locally")
-      system %(bundle exec rake assets:precompile RAILS_GROUPS=assets)
+      system %(RAILS_ENV=#{rails_env} bundle exec rake assets:precompile RAILS_GROUPS=assets)
 
       system %[echo "-----> RSyncing remote assets (tmp/assets) with local assets (#{precompiled_assets_dir})"]
       if port.nil?
