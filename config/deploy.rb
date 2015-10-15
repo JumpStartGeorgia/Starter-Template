@@ -45,6 +45,7 @@ set :nginx_conf, -> { "#{full_current_path}/config/nginx.conf" }
 set :nginx_symlink, -> { "/etc/nginx/sites-enabled/#{application}" }
 
 # SSL settings
+set_default :use_ssl, false
 set :ssl_key, -> { "/etc/sslmate/#{web_url}.key" }
 set :ssl_cert, -> { "/etc/sslmate/#{web_url}.chained.crt" }
 
