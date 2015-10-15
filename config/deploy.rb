@@ -310,6 +310,11 @@ namespace :puma do
 end
 
 namespace :git do
+  desc 'Git diff local with server'
+  task :diff_local do
+    `git diff #{get_deployed_commit_hash}..#{get_local_commit_hash}`
+  end
+
   desc 'Remove FETCH_HEAD file containing currently deployed git commit hash; this will force user to precompile on next deploy'
   task :remove_fetch_head do
     queue %(
@@ -355,10 +360,10 @@ namespace :deploy do
         # Locations where assets may have changed; check Gemfile.lock to ensure that gem assets are the same
         asset_files_directories = 'app/assets vendor/assets Gemfile.lock'
 
-        current_commit = `git rev-parse HEAD`.strip
+        current_commit = get_local_commit_hash
 
         # Get deployed commit hash
-        deployed_commit = capture(%(cat #{fetch_head})).split(' ')[0]
+        deployed_commit = get_deployed_commit_hash
 
         # If FETCH_HEAD file does not exist or deployed_commit doesn't look like a hash, ask user to force precompile
         if deployed_commit.nil? || deployed_commit.length != 40
@@ -551,4 +556,12 @@ def get_sudo_user(task)
   end
 
   sudo_user
+end
+
+def get_local_commit_hash
+  `git rev-parse HEAD`.strip
+end
+
+def get_deployed_commit_hash
+  capture(%(cat #{fetch_head})).split(' ')[0]
 end
