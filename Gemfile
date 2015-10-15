@@ -22,9 +22,6 @@ gem 'cancancan', '~> 1.10.1'
 
 group :development do
   gem 'quiet_assets', '~> 1.0.3'
-  gem 'rack-mini-profiler', '~> 0.9.3', require: false
-  gem 'flamegraph', '~> 0.1.0'
-  gem 'stackprof', '~> 0.2.7'
   gem 'bullet', '~> 4.14.5'
 
   gem 'mina', '~> 0.3.3', require: false
