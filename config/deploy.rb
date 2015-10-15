@@ -312,7 +312,8 @@ end
 namespace :git do
   desc 'Git diff local with server'
   task :diff_local do
-    `git diff #{get_deployed_commit_hash}..#{get_local_commit_hash}`
+    diff = `git diff #{get_deployed_commit_hash}..#{get_local_commit_hash}`
+    puts diff
   end
 
   desc 'Remove FETCH_HEAD file containing currently deployed git commit hash; this will force user to precompile on next deploy'
