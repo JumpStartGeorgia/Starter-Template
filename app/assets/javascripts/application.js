@@ -10,10 +10,17 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+////////////////////////////////////////
+//
+// For turbolinks to work, these jQuery libraries must be loaded first and
+// turbolinks last. Put other libraries in the marked area in the middle.
+//
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
-//= require_tree .
+
+////////////////////////////////////////
+///////  Load dependencies here  ///////
 
 // Bootstrap Javascript
 //= require twitter/bootstrap/transition
@@ -28,3 +35,9 @@
 //= require twitter/bootstrap/collapse
 //= require twitter/bootstrap/carousel
 //= require twitter/bootstrap/affix
+
+//= require_tree .
+
+////////////////////////////////////////
+
+//= require turbolinks
