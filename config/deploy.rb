@@ -401,10 +401,10 @@ namespace :deploy do
       system %(RAILS_ENV=#{rails_env} bundle exec rake assets:precompile RAILS_GROUPS=assets)
 
       system %[echo "-----> RSyncing remote assets (tmp/assets) with local assets (#{precompiled_assets_dir})"]
-      if port.nil?
+      if ssh_port.nil?
         system %(rsync #{rsync_verbose} --recursive --times ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
       else
-        system %(rsync #{rsync_verbose} -e 'ssh -p #{port}' --recursive --times --delete ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
+        system %(rsync #{rsync_verbose} -e 'ssh -p #{ssh_port}' --recursive --times --delete ./#{precompiled_assets_dir}/. #{user}@#{domain}:#{deploy_to}/tmp/assets)
       end
     end
 
@@ -426,10 +426,10 @@ task setup: :environment do
   capture(%(ls #{full_shared_path}/.env)).split(' ')[0] == "#{shared_env_path}" ? env_exists = true : env_exists = false
 
   unless env_exists
-    if port.nil?
+    if ssh_port.nil?
       system %(scp .env.example #{user}@#{domain}:#{temp_env_example_path})
     else
-      system %(scp -P #{port} .env.example #{user}@#{domain}:#{temp_env_example_path})
+      system %(scp -P #{ssh_port} .env.example #{user}@#{domain}:#{temp_env_example_path})
     end
   end
 
@@ -539,7 +539,7 @@ private
 
 def sudo_ssh_cmd(task)
   command = "ssh #{get_sudo_user(task)}@#{domain} -t"
-  command += " -p #{port}" if !port.nil?
+  command += " -p #{ssh_port}" if !ssh_port.nil?
   command
 end
 
