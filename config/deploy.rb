@@ -82,7 +82,7 @@ namespace :rails do
       echo "-----> Copying new robots.txt to: #{robots_path}"
       echo '#{robots}' > #{robots_path};
     else
-      echo "-----> Copying new puma.rb to: $PWD/public/robots.txt"
+      echo "-----> Copying new robots.txt to: $PWD/public/robots.txt"
       echo '#{robots}' > ./public/robots.txt;
     fi
     )
