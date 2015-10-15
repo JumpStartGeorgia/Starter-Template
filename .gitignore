@@ -16,3 +16,6 @@
 /.env
 /public/assets
 /public/system
+
+# Temporary files often end with ~ character
+*~
