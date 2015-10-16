@@ -504,6 +504,7 @@ task deploy: :environment do
       else
         invoke :'puma:stop'
         invoke :'puma:start'
+        invoke :'finished_deploy_message'
       end
     end
   end
@@ -515,9 +516,12 @@ task :post_setup do
   invoke :'puma:jungle:add'
   invoke :'nginx:stop'
   invoke :'nginx:start'
+  invoke :'finished_deploy_message'
+end
 
+task :finished_deploy_message do
   queue %(echo "")
-  queue %(echo "-------------------- Finished Setup --------------------")
+  queue %(echo "-------------------- Finished Deploy --------------------")
   queue %(echo "")
   queue %(echo "Your site should be deployed and running at:")
   queue %(echo "")
