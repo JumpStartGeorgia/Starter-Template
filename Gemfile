@@ -19,6 +19,7 @@ gem 'twitter-bootstrap-rails', '~> 3.2.0'
 gem 'formtastic-bootstrap', '~> 3.1.0'
 gem 'devise', '~> 3.4.1'
 gem 'cancancan', '~> 1.10.1'
+gem 'bootstrap-sass', '~> 3.3.5' # So that our SCSS can use bootstrap variables
 
 group :development do
   gem 'quiet_assets', '~> 1.0.3'
