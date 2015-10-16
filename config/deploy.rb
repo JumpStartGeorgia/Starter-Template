@@ -515,6 +515,14 @@ task :post_setup do
   invoke :'puma:jungle:add'
   invoke :'nginx:stop'
   invoke :'nginx:start'
+
+  queue %(echo "")
+  queue %(echo "-------------------- Finished Setup --------------------")
+  queue %(echo "")
+  queue %(echo "Your site should be deployed and running at:")
+  queue %(echo "")
+  queue %(echo "#{web_url}")
+  queue %(echo "")
 end
 
 desc 'Removes application directory from server, removes nginx symlink, removes app from puma jungle and restarts nginx.'
