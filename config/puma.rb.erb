@@ -10,7 +10,7 @@ activate_control_app "unix://<%= pumactl_socket %>"
 
 stdout_redirect "<%= puma_error_log %>", "<%= puma_access_log %>", true
 
-threads 2,4
+threads <%= puma_thread_count_min %>,<%= puma_thread_count_max %>
 
 bind "unix://<%= puma_socket %>"
-workers 2
+workers <%= puma_worker_count %>

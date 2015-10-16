@@ -39,6 +39,9 @@ set :puma_access_log, -> { "#{full_shared_path}/log/puma.access.log" }
 set :puma_log, -> { "#{full_shared_path}/log/puma.log" }
 set :puma_env, -> { "#{rails_env}" }
 set :puma_port, '9292'
+set_default :puma_worker_count, '1'
+set_default :puma_thread_count_min, '1'
+set_default :puma_thread_count_max, '1'
 
 # Nginx settings
 set :nginx_conf, -> { "#{full_current_path}/config/nginx.conf" }
