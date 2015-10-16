@@ -9,7 +9,6 @@ RSpec.configure do |_config|
 
   #### TODO COMMENTED OUT BELOW CODE BECAUSE IT'S COPIED FROM PRISONERS PROJECT AND NOT SURE IF IT'S NEEDED
 
-
   # # Makes controllers work with default locale
   # # Taken from http://stackoverflow.com/a/19079076/3115911
   # class ActionController::TestCase

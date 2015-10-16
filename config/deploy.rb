@@ -507,7 +507,7 @@ task deploy: :environment do
       else
         invoke :'puma:stop'
         invoke :'puma:start'
-        invoke :'finished_deploy_message'
+        invoke :finished_deploy_message
       end
     end
   end
@@ -519,7 +519,7 @@ task :post_setup do
   invoke :'puma:jungle:add'
   invoke :'nginx:stop'
   invoke :'nginx:start'
-  invoke :'finished_deploy_message'
+  invoke :finished_deploy_message
 end
 
 task :finished_deploy_message do
