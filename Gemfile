@@ -27,6 +27,7 @@ group :development do
 
   gem 'mina', '~> 0.3.3', require: false
   gem 'mina-multistage', '~> 1.0.1', require: false
+  gem 'brakeman', '~> 3.0.5', require: false
 end
 
 group :development, :test do
