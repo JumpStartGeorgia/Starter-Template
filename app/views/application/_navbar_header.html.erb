@@ -11,6 +11,20 @@
         <li><%= link_to "Link1", "/path1"  %></li>
         <li><%= link_to "Link2", "/path2"  %></li>
         <li><%= link_to "About", about_path  %></li>
+        <li class='language-switcher-container'>
+          <ul class='language-switcher'>
+            <% I18n.available_locales.each do |locale| %>
+              <li class='language-switcher-item <%= "is-active" if I18n.locale == locale %>'>
+                <%=
+                if I18n.locale == locale
+                  link_to t("shared.locale.short.#{locale}"), url_for(locale: locale), class: 'language-switcher-item-link is-active'
+                else
+                  link_to t("shared.locale.short.#{locale}"), url_for(locale: locale), class: 'language-switcher-item-link'
+                end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
