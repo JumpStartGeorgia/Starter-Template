@@ -20,7 +20,7 @@ ka:
     #     view: View %{obj}
     #     view_all: View All %{obj}
     #     view_page: View %{obj} Page
-    # common:
+    common:
     #   all: All
     #   actions: Actions
     #   description: Azerbaijan's track record on human rights has deteriorated dramatically since 2012. This trend is most evident in the high number of politically motivated arrests, which have targeted human rights defenders, journalists and others. Here you can meet Azerbaijan's political prisoners, and you can explore the scope of Azerbaijan's efforts to stifle freedoms of expression.
@@ -28,7 +28,7 @@ ka:
     #     slogan: JumpStart Georgia - We communicate data better!
     #   meydan:
     #     slogan: MEYDAN TV - Azerbaijan's free and alternative media channel
-    #   name: Political Prisoners Watch
+      name: დასაწყისი მოდელი
     # datetime:
     #   full: "%Y-%m-%d_%H-%M-%S"
     # labels:
