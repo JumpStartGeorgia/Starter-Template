@@ -28,7 +28,7 @@ en:
     #     slogan: JumpStart Georgia - We communicate data better!
     #   meydan:
     #     slogan: MEYDAN TV - Azerbaijan's free and alternative media channel
-      name: Starter Template
+      name: Rails Starter Template
     # datetime:
     #   full: "%Y-%m-%d_%H-%M-%S"
     # labels:
