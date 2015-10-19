@@ -27,10 +27,11 @@ gem 'bootstrap-sass', '~> 3.3.5' # So that our SCSS can use bootstrap variables
 group :development do
   gem 'quiet_assets', '~> 1.0.3'
   gem 'bullet', '~> 4.14.5'
+  gem 'brakeman', '~> 3.0.5', require: false
+  gem 'i18n-tasks', '~> 0.8.3' # finds unused and missing translations
 
   gem 'mina', '~> 0.3.3', require: false
   gem 'mina-multistage', '~> 1.0.1', require: false
-  gem 'brakeman', '~> 3.0.5', require: false
 end
 
 group :development, :test do
