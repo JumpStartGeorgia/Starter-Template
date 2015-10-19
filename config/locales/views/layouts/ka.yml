@@ -1,0 +1,9 @@
+---
+ka:
+  layouts:
+    application:
+      about:
+        project: პროექტის შესახებ
+      # account:
+      #   edit_profile: Edit Profile
+      #   logout: Logout

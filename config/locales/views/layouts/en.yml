@@ -1,0 +1,9 @@
+---
+en:
+  layouts:
+    application:
+      about:
+        project: About Project
+      # account:
+      #   edit_profile: Edit Profile
+      #   logout: Logout
