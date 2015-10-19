@@ -1,10 +1,16 @@
 Rails.application.routes.draw do
+
+  scope ':locale', locale: /#{I18n.available_locales.join("|")}/ do
+    root 'root#index'
+    get '/about' => 'root#about'
+  end
+
+  get '', to: redirect("/#{I18n.default_locale}") # handles /
+  # handles /not-a-locale/anything
+  get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  root 'root#index'
-  get '/about' => 'root#about'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
