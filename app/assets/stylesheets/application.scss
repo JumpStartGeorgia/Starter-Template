@@ -11,6 +11,10 @@ URL: https://gist.github.com/bobbygrace/9e961e8982f42eb91b80
 @import 'media-queries';
 @import 'bootstrap_and_overrides';
 
+// Font awesome icons
+@import "font-awesome-sprockets";
+@import "font-awesome";
+
 // Components
 @import 'components/app-footer';
 @import 'components/language_switcher';

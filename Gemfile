@@ -50,6 +50,9 @@ gem 'cancancan', '~> 1.10.1'
 # So that our SCSS can use bootstrap variables
 gem 'bootstrap-sass', '~> 3.3.5'
 
+# Useful icons
+gem 'font-awesome-sass', '~> 4.4.0'
+
 # Ruby server
 gem 'puma', '~> 2.11.1'
 
