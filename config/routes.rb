@@ -1,11 +1,15 @@
 Rails.application.routes.draw do
-
   scope ':locale', locale: /#{I18n.available_locales.join("|")}/ do
     root 'root#index'
     get '/about' => 'root#about'
+
+    # handles /en/fake/path/whatever
+    get '*path', to: redirect("/#{I18n.default_locale}")
   end
 
-  get '', to: redirect("/#{I18n.default_locale}") # handles /
+  # handles /
+  get '', to: redirect("/#{I18n.default_locale}")
+
   # handles /not-a-locale/anything
   get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
 
