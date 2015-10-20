@@ -5,3 +5,6 @@ en:
       link1: 'link #1'
       link2: 'link #2'
       about: About Project
+      account:
+        edit_profile: 'Edit Profile'
+        logout: 'Logout'
