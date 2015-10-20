@@ -2,6 +2,9 @@
 ka:
   application:
     navbar_header:
-      link1: ლინკი 1
-      link2: ლინკი 2
-      about: პროექტის შესახებ
+      about: "პროექტის შესახებ"
+      account:
+        edit_profile: პროფილის შეცვლა
+        logout: გასვლა
+      link1: "ლინკი 1"
+      link2: "ლინკი 2"
