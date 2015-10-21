@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   scope ':locale', locale: /#{I18n.available_locales.join("|")}/ do
+    post '/users', to: 'users#create'
+
     devise_for :users,
                controllers: {
                  confirmations: 'users/confirmations',

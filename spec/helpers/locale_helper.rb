@@ -7,6 +7,13 @@ RSpec.configure do |_config|
     I18n.l(string, options)
   end
 
+  # Makes routing specs work with default locale
+  class ActionDispatch::Routing::RouteSet
+    def default_url_options(_options = {})
+      { locale: I18n.default_locale }
+    end
+  end
+
   #### TODO COMMENTED OUT BELOW CODE BECAUSE IT'S COPIED FROM PRISONERS PROJECT AND NOT SURE IF IT'S NEEDED
 
   # # Makes controllers work with default locale
@@ -27,12 +34,5 @@ RSpec.configure do |_config|
   #
   # config.before(:each, type: :request) do
   #   default_url_options[:locale] = I18n.default_locale
-  # end
-  #
-  # # Makes routing specs work with default locale
-  # class ActionDispatch::Routing::RouteSet
-  #   def default_url_options(_options = {})
-  #     { locale: I18n.default_locale }
-  #   end
   # end
 end
