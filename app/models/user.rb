@@ -20,4 +20,16 @@ class User < ActiveRecord::Base
       return false
     end
   end
+
+  def editable_roles
+    roles = []
+    Role.all.each do |role|
+      roles.append(role) if can? :create,
+                                 User.new(email: 'assdfasdfasdf@asdfdsffsd.com',
+                                          password: '1234231432143',
+                                          role: role)
+    end
+
+    roles
+  end
 end
