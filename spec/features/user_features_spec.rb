@@ -5,7 +5,7 @@ RSpec.describe 'User', type: :feature do
   new_content_manager_password = 'dsalfkdjsakfjds'
   site_admin_password = 'kqpiojgipoeczvipn@#!!'
 
-  before (:example) do
+  before :example do
     @content_manager_role = FactoryGirl.create(:role, name: 'content_manager')
     @site_admin_role = FactoryGirl.create(:role, name: 'site_admin')
     @super_admin_role = FactoryGirl.create(:role, name: 'super_admin')
