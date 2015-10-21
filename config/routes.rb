@@ -10,7 +10,8 @@ Rails.application.routes.draw do
                  registrations: 'users/registrations',
                  sessions: 'users/sessions',
                  unlocks: 'users/unlocks'
-               }, constraints: { format: :html }
+               },
+               constraints: { format: :html }
 
     resources :users, constraints: { format: :html }
 
