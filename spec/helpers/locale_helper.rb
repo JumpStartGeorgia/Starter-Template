@@ -1,4 +1,4 @@
-RSpec.configure do |_config|
+RSpec.configure do |config|
   def t(string, options = {})
     I18n.t(string, options)
   end
@@ -26,13 +26,11 @@ RSpec.configure do |_config|
     end
   end
 
+  config.before(:each, type: :feature) do
+    default_url_options[:locale] = I18n.default_locale
+  end
+
   #### TODO COMMENTED OUT BELOW CODE BECAUSE IT'S COPIED FROM PRISONERS PROJECT AND NOT SURE IF IT'S NEEDED
-
-
-  #
-  # config.before(:each, type: :feature) do
-  #   default_url_options[:locale] = I18n.default_locale
-  # end
   #
   # config.before(:each, type: :request) do
   #   default_url_options[:locale] = I18n.default_locale
