@@ -47,9 +47,6 @@ RSpec.describe 'User', type: :feature do
 
   describe 'site_admin' do
     it 'can successfully edit someone else\'s password' do
-      # Home page requires app_intro page section
-      FactoryGirl.create(:page_section, name: 'app_intro')
-
       visit new_user_session_path
       within('#new_user') do
         fill_in 'Email', with: @site_admin_user.email
@@ -91,9 +88,6 @@ RSpec.describe 'User', type: :feature do
 
   describe 'content_manager' do
     it 'can successfully edit their own password' do
-      # Home page requires app_intro page section
-      FactoryGirl.create(:page_section, name: 'app_intro')
-
       visit new_user_session_path
       within('#new_user') do
         fill_in 'Email', with: @content_manager_user.email
