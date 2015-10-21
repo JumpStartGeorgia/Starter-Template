@@ -87,6 +87,10 @@ group :development, :test do
   # Specification testing
   gem 'rspec-rails', '~> 3.1.0'
 
+  # Adds syntax to check that a collection has a certain number of something
+  # Ex: expect(new_user).to have(1).error_on(:role)
+  gem 'rspec-collection_matchers', '~> 1.1.2'
+
   # Easy data creation in tests
   gem 'factory_girl_rails', '~> 4.5.0'
 

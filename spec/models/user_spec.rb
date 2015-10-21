@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:user) { FactoryGirl.build(:user) }
+  let(:new_user) { FactoryGirl.build(:user) }
 
   context 'with required attributes' do
     it 'is valid' do
@@ -12,13 +12,17 @@ RSpec.describe User, type: :model do
   describe 'email' do
     context 'when present' do
       it 'does not cause error' do
-        pending
+        expect(new_user).to have(0).error_on(:email)
       end
     end
 
     context 'when blank' do
+      before :example do
+        new_user.email = ''
+      end
+
       it 'causes error' do
-        pending
+        expect(new_user).to have(1).error_on(:email)
       end
     end
   end
@@ -26,13 +30,17 @@ RSpec.describe User, type: :model do
   describe 'role' do
     context 'when present' do
       it 'does not cause error' do
-        pending
+        expect(new_user).to have(0).error_on(:role)
       end
     end
 
     context 'when blank' do
+      before :example do
+        new_user.role = nil
+      end
+
       it 'causes error' do
-        pending
+        expect(new_user).to have(1).error_on(:role)
       end
     end
   end
