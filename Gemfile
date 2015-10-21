@@ -109,6 +109,9 @@ group :development, :test do
 
   # Cleans database during tests
   gem 'database_cleaner', '~> 1.3.0'
+
+  # Fast web driver with JavaScript support for feature tests
+  gem 'poltergeist', '~> 1.7'
 end
 
 #####################################################################
