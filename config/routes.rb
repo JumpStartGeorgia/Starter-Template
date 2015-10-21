@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
   scope ':locale', locale: /#{I18n.available_locales.join("|")}/ do
-    devise_for :users
+    devise_for :users,
+               controllers: {
+                 confirmations: 'users/confirmations',
+                 omniauth: 'users/omniauth',
+                 passwords: 'users/passwords',
+                 registrations: 'users/registrations',
+                 sessions: 'users/sessions',
+                 unlocks: 'users/unlocks'
+               }, constraints: { format: :html }
+
+    resources :users, constraints: { format: :html }
 
     root 'root#index'
     get '/about' => 'root#about'
