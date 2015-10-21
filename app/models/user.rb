@@ -10,7 +10,8 @@ class User < ActiveRecord::Base
          :validatable
 
   belongs_to :role
-  validates :email, :role, presence: true
+  # Email already required by devise
+  validates :role, presence: true
 
   def is?(requested_role)
     if role
