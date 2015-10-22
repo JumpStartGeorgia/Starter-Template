@@ -6,7 +6,7 @@
     <%= f.input :role,
                 as: :select,
                 include_blank: false,
-                collection: @user.editable_roles %>
+                collection: @user.manageable_roles %>
   <% end %>
 
   <%= f.actions do %>
