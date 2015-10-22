@@ -22,15 +22,6 @@ class User < ActiveRecord::Base
   end
 
   def manageable_roles
-    Role.all.select { |role| can_manage? role }
-  end
-
-  def can_manage?(role)
-    Ability.new(self).can? :manage,
-                           User.new(
-                             email: 'assdfasdfasdf@asdfdsffsd.com',
-                             password: '1234231432143',
-                             role: role
-                           )
+    Role.all.select { |role| Ability.new(self).can? :manage, role }
   end
 end

@@ -14,7 +14,9 @@ class Ability
     elsif user.is? 'site_admin'
       can :manage, content_resources
       can :manage, User
+      can :manage, Role
       cannot :manage, User, role: { name: 'super_admin' }
+      cannot :manage, Role, name: 'super_admin'
     elsif user.is? 'content_manager'
       can :manage, content_resources
     end
