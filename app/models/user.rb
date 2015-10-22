@@ -21,19 +21,21 @@ class User < ActiveRecord::Base
     end
   end
 
-  def editable_roles
+  def manageable_roles
     roles = []
     Role.all.each do |role|
-      if Ability.new(self).can? :create,
-                                User.new(
-                                  email: 'assdfasdfasdf@asdfdsffsd.com',
-                                  password: '1234231432143',
-                                  role: role
-                                )
-        roles.append(role)
-      end
+      roles.append(role) if can_create? role
     end
 
     roles
+  end
+
+  def can_manage?(role)
+    Ability.new(self).can? :manage,
+                           User.new(
+                             email: 'assdfasdfasdf@asdfdsffsd.com',
+                             password: '1234231432143',
+                             role: role
+                           )
   end
 end
