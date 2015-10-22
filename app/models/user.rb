@@ -23,8 +23,9 @@ class User < ActiveRecord::Base
 
   def manageable_roles
     roles = []
+
     Role.all.each do |role|
-      roles.append(role) if can_create? role
+      roles.append(role) if can_manage? role
     end
 
     roles
