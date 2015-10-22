@@ -1,28 +1,28 @@
 ---
 en:
   shared:
-    # actions:
-    #   destroy: Delete
-    #   edit: Edit
-    #   log_in: Log in
-    #   view: View
-    #   with_obj:
-    #     add_new: Add New %{obj}
-    #     cancel: Cancel %{obj}
-    #     create: Create %{obj}
-    #     destroy: Delete %{obj}
-    #     download_data: Download %{obj} Data
-    #     edit: Edit %{obj}
-    #     new: New %{obj}
-    #     search: Search %{obj}
-    #     select: Select %{obj}
-    #     update: Update %{obj}
-    #     view: View %{obj}
-    #     view_all: View All %{obj}
-    #     view_page: View %{obj} Page
+    actions:
+      destroy: Delete
+      edit: Edit
+      log_in: Log in
+      view: View
+      with_obj:
+        add_new: Add New %{obj}
+        cancel: Cancel %{obj}
+        create: Create %{obj}
+        destroy: Delete %{obj}
+        download_data: Download %{obj} Data
+        edit: Edit %{obj}
+        new: New %{obj}
+        search: Search %{obj}
+        select: Select %{obj}
+        update: Update %{obj}
+        view: View %{obj}
+        view_all: View All %{obj}
+        view_page: View %{obj} Page
     common:
-    #   all: All
-    #   actions: Actions
+      # all: All
+      actions: Actions
     #   description: Azerbaijan's track record on human rights has deteriorated dramatically since 2012. This trend is most evident in the high number of politically motivated arrests, which have targeted human rights defenders, journalists and others. Here you can meet Azerbaijan's political prisoners, and you can explore the scope of Azerbaijan's efforts to stifle freedoms of expression.
     #   jumpstart:
     #     slogan: JumpStart Georgia - We communicate data better!
@@ -33,17 +33,17 @@ en:
     #   full: "%Y-%m-%d_%H-%M-%S"
     # labels:
     #   translated_field: "%{field} (%{language})"
-    # msgs:
-    #   does_not_exist: You tried to access a page that does not exist.
+    msgs:
+      does_not_exist: You tried to access a page that does not exist.
     #   no_search_results: Sorry, there are no %{obj} on file that match your search request.
-    #   not_authorized: You are not authorized to view that page.
+      not_authorized: You are not authorized to view that page.
     #   not_listed: No %{obj} listed
     #   search_results: "%{num} %{obj} Found"
-    #   success_created: "%{obj} was successfully created."
-    #   success_destroyed: "%{obj} was successfully destroyed."
-    #   success_updated: "%{obj} was successfully updated."
-    # prompts:
-    #   confirm: Are you sure?
+      success_created: "%{obj} was successfully created."
+      success_destroyed: "%{obj} was successfully destroyed."
+      success_updated: "%{obj} was successfully updated."
+    prompts:
+      confirm: Are you sure?
     #   create_in_dropdown: If the %{obj} does not yet exist in the dropdown, create it here.
     #   forgot_password: Forgot your password?
     locale:
