@@ -31,10 +31,10 @@ module ActionsHelper
             class: 'btn btn-default'
   end
 
-  def destroy_button(object, show_path)
+  def destroy_button(object)
     link_to t('shared.actions.with_obj.destroy',
               obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
-            show_path,
+            object,
             method: :delete,
             data: { confirm: t('shared.prompts.confirm') },
             class: 'btn btn-danger'

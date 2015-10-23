@@ -6,7 +6,7 @@
 <div class='actions-container'>
   <%= view_all_button(@user) %>
   <%= edit_button(@user) if can? :edit, @user %>
-  <%= destroy_button(@user, user_path) if can? :destroy, @user %>
+  <%= destroy_button(@user) if can? :destroy, @user %>
 </div>
 
 <dl class='dl-horizontal'>
