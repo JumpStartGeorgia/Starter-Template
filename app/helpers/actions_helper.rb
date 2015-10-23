@@ -15,4 +15,12 @@ module ActionsHelper
             url_for(object),
             class: 'btn btn-default'
   end
+
+  def new_button(model_class, new_path)
+    link_to t('shared.actions.with_obj.new',
+              obj: t("activerecord.models.#{model_class.model_name.singular}",
+                     count: 1)),
+            new_path,
+            class: 'btn btn-primary'
+  end
 end
