@@ -24,10 +24,10 @@ module ActionsHelper
             class: 'btn btn-primary'
   end
 
-  def edit_button(object, edit_path)
+  def edit_button(object)
     link_to t('shared.actions.with_obj.edit',
               obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
-            edit_path,
+            [:edit, object],
             class: 'btn btn-default'
   end
 
