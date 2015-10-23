@@ -12,7 +12,7 @@ module ActionsHelper
     link_to t('shared.actions.with_obj.view_all',
               obj: t("activerecord.models.#{object.model_name.singular}",
                      count: 999)),
-            url_for(object),
+            url_for(action: :index, controller: object.model_name.plural),
             class: 'btn btn-default'
   end
 
