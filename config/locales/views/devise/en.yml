@@ -1,0 +1,5 @@
+en:
+  devise:
+    passwords:
+      new:
+        send_reset_password_instructions: Send me reset password instructions
