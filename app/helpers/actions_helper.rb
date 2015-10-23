@@ -23,4 +23,20 @@ module ActionsHelper
             new_path,
             class: 'btn btn-primary'
   end
+
+  def edit_button(object, edit_path)
+    link_to t('shared.actions.with_obj.edit',
+              obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+            edit_path,
+            class: 'btn btn-default'
+  end
+
+  def destroy_button(object, show_path)
+    link_to t('shared.actions.with_obj.destroy',
+              obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+            show_path,
+            method: :delete,
+            data: { confirm: t('shared.prompts.confirm') },
+            class: 'btn btn-danger'
+  end
 end

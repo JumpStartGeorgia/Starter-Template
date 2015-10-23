@@ -3,18 +3,11 @@
                 user_model_name: t('activerecord.models.user', count: 1),
                 user_email: @user.email) %>
 
-<% if user_signed_in? %>
-  <div class='actions-container'>
-    <%= render partial: 'shared/show_actions',
-               locals: {
-                 object: @user,
-                 index_path: users_path,
-                 show_path: user_path,
-                 edit_path: edit_user_path
-               }
-    %>
-  </div>
-<% end %>
+<div class='actions-container'>
+  <%= view_all_button(@user) %>
+  <%= edit_button(@user, edit_user_path) if can? :edit, @user %>
+  <%= destroy_button(@user, user_path) if can? :destroy, @user %>
+</div>
 
 <dl class='dl-horizontal'>
   <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
