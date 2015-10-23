@@ -26,11 +26,15 @@ RSpec.describe 'User', type: :feature do
   end
 
   let!(:site_admin_user) do
-    FactoryGirl.create(:user, role: site_admin_role, password: site_admin_password)
+    FactoryGirl.create(:user,
+                       role: site_admin_role,
+                       password: site_admin_password)
   end
 
   let!(:content_manager_user) do
-    FactoryGirl.create(:user, role: content_manager_role, password: content_manager_password)
+    FactoryGirl.create(:user,
+                       role: content_manager_role,
+                       password: content_manager_password)
   end
 
   describe 'super_admin' do
@@ -100,6 +104,20 @@ RSpec.describe 'User', type: :feature do
 
       visit new_user_path
       expect(page).to have_select 'Role', options: [site_admin_role.name, content_manager_role.name]
+    end
+
+    it 'can create a content_manager user' do
+      login_as site_admin_user, scope: :user
+      visit new_user_path
+
+      within('#new_user') do
+        fill_in 'Email', with: 'dasfkjdsfajk@fdjkslfajds.com'
+        fill_in 'Password', with: 'ADSASF!244xzfds'
+        select('content_manager', from: 'Role')
+      end
+
+      click_on 'Create User'
+      expect(page).to have_content('User was successfully created.')
     end
   end
 
