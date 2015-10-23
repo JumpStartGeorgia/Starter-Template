@@ -29,3 +29,4 @@ en:
       success_updated: "%{obj} was successfully updated."
     prompts:
       confirm: Are you sure?
+      forgot_password: Forgot your password?
