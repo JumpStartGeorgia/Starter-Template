@@ -14,7 +14,9 @@
   <% end -%>
 
   <%= f.actions do %>
-    <%= f.action :submit, label: t('shared.actions.log_in') %>
+    <%= f.action :submit,
+                 label: t('shared.actions.log_in'),
+                 button_html: { class: 'btn btn-success' } %>
   <% end %>
 <% end %>
 
