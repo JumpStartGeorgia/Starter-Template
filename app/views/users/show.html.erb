@@ -3,7 +3,7 @@
                 user_model_name: t('activerecord.models.user', count: 1),
                 user_email: @user.email) %>
 
-<div class='actions-container'>
+<div class='actions'>
   <%= view_all_button(@user) %>
   <%= edit_button(@user) if can? :edit, @user %>
   <%= destroy_button(@user) if can? :destroy, @user %>
