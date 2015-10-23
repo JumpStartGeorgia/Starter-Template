@@ -7,19 +7,19 @@ en:
       log_in: Log in
       view: View
       with_obj:
-        add_new: Add New %{obj}
-        cancel: Cancel %{obj}
+        # add_new: Add New %{obj}
+        # cancel: Cancel %{obj}
         create: Create %{obj}
         destroy: Delete %{obj}
-        download_data: Download %{obj} Data
+        # download_data: Download %{obj} Data
         edit: Edit %{obj}
         new: New %{obj}
-        search: Search %{obj}
-        select: Select %{obj}
+        # search: Search %{obj}
+        # select: Select %{obj}
         update: Update %{obj}
         view: View %{obj}
         view_all: View All %{obj}
-        view_page: View %{obj} Page
+        # view_page: View %{obj} Page
     common:
       # all: All
       actions: Actions

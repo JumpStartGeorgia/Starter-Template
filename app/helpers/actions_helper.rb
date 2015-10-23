@@ -1,7 +1,7 @@
 # Action button helpers, i.e. to easily create a 'Show User' button
 module ActionsHelper
   def view_button(object)
-    link_to t('shared.actions.with_obj.view_page',
+    link_to t('shared.actions.with_obj.view',
               obj: t("activerecord.models.#{object.model_name.singular}",
                      count: 1)),
             object,
