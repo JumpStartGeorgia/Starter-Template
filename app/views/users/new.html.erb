@@ -4,12 +4,7 @@
 
 <% if user_signed_in? %>
   <div class='actions-container'>
-    <%= render partial: 'shared/new_actions',
-               locals: {
-                 object: @user,
-                 index_path: users_path,
-               }
-    %>
+    <%= view_all_button(@user) %>
   </div>
 <% end %>
 
