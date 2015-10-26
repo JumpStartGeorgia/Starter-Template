@@ -1,6 +1,7 @@
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
+require 'capybara/email/rspec'
 
 RSpec.configure do |_config|
   # Only keeps html and png screenshots from the last test run

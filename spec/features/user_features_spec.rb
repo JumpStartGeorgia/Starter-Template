@@ -155,5 +155,20 @@ RSpec.describe 'User', type: :feature do
       click_on 'Log in'
       expect(page).to have_content('Signed in successfully.')
     end
+
+    it 'can reset password by email' do
+      visit new_user_session_path
+      click_on 'Forgot your password?'
+
+      within '#new_user' do
+        fill_in 'Email', with: content_manager_user.email
+      end
+
+      click_on 'Send me reset password instructions'
+
+      open_email(content_manager_user.email)
+
+      expect(current_email).to have_content 'Change my password'
+    end
   end
 end

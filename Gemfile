@@ -112,6 +112,9 @@ group :development, :test do
 
   # Fast web driver with JavaScript support for feature tests
   gem 'poltergeist', '~> 1.7'
+
+  # Feature testing for emails
+  gem 'capybara-email', '~> 2.4'
 end
 
 #####################################################################
