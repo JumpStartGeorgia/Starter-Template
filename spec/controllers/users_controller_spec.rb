@@ -19,11 +19,17 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe UsersController, type: :controller do
-  let(:content_manager_role) { FactoryGirl.create(:role, name: 'content_manager') }
+  let(:content_manager_role) do
+    FactoryGirl.create(:role, name: 'content_manager')
+  end
+
   let(:site_admin_role) { FactoryGirl.create(:role, name: 'site_admin') }
   let(:super_admin_role) { FactoryGirl.create(:role, name: 'super_admin') }
 
-  let(:content_manager_user) { FactoryGirl.create(:user, role: content_manager_role) }
+  let(:content_manager_user) do
+    FactoryGirl.create(:user, role: content_manager_role)
+  end
+
   let(:site_admin_user) { FactoryGirl.create(:user, role: site_admin_role) }
   let(:super_admin_user) { FactoryGirl.create(:user, role: super_admin_role) }
 
@@ -42,7 +48,9 @@ RSpec.describe UsersController, type: :controller do
     end
 
     let(:invalid_attributes) do
-      FactoryGirl.attributes_for(:user, email: '', role_id: content_manager_role.id)
+      FactoryGirl.attributes_for(:user,
+                                 email: '',
+                                 role_id: content_manager_role.id)
     end
 
     before(:example) do
@@ -119,19 +127,25 @@ RSpec.describe UsersController, type: :controller do
 
         it 'updates the requested user' do
           user = FactoryGirl.create(:user, valid_attributes)
-          put :update, { id: user.to_param, user: new_attributes }, valid_session
+          put :update,
+              { id: user.to_param, user: new_attributes },
+              valid_session
           user.reload
         end
 
         it 'assigns the requested user as @user' do
           user = FactoryGirl.create(:user, valid_attributes)
-          put :update, { id: user.to_param, user: valid_attributes }, valid_session
+          put :update,
+              { id: user.to_param, user: valid_attributes },
+              valid_session
           expect(assigns(:user)).to eq(user)
         end
 
         it 'redirects to the user' do
           user = FactoryGirl.create(:user, valid_attributes)
-          put :update, { id: user.to_param, user: valid_attributes }, valid_session
+          put :update,
+              { id: user.to_param, user: valid_attributes },
+              valid_session
           expect(response).to redirect_to(user)
         end
       end
@@ -139,13 +153,17 @@ RSpec.describe UsersController, type: :controller do
       describe 'with invalid params' do
         it 'assigns the user as @user' do
           user = FactoryGirl.create(:user, valid_attributes)
-          put :update, { id: user.to_param, user: invalid_attributes }, valid_session
+          put :update,
+              { id: user.to_param, user: invalid_attributes },
+              valid_session
           expect(assigns(:user)).to eq(user)
         end
 
         it "re-renders the 'edit' template" do
           user = FactoryGirl.create(:user, valid_attributes)
-          put :update, { id: user.to_param, user: invalid_attributes }, valid_session
+          put :update,
+              { id: user.to_param, user: invalid_attributes },
+              valid_session
           expect(response).to render_template('edit')
         end
       end
@@ -189,7 +207,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'successfully updates a content manager to super admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: super_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(user)
         expect(user.role.name).to eq('super_admin')
@@ -197,7 +217,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'successfully updates a content manager to site admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: site_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: site_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(user)
         expect(user.role.name).to eq('site_admin')
@@ -205,7 +227,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'successfully updates a site admin to super admin role' do
         user = FactoryGirl.create(:user, site_admin_attributes)
-        put :update, { id: user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: super_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(user)
         expect(user.role.name).to eq('super_admin')
@@ -219,7 +243,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'fails to update another site admin to super admin role' do
         user = FactoryGirl.create(:user, site_admin_attributes)
-        put :update, { id: user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: super_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -228,7 +254,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'fails to update a content manager to super admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: super_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -237,14 +265,18 @@ RSpec.describe UsersController, type: :controller do
 
       it 'successfully updates a content manager to site admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: site_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: site_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(user)
         expect(user.role.name).to eq('site_admin')
       end
 
       it 'fails to update its own role to super_admin' do
-        put :update, { id: site_admin_user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: site_admin_user.to_param, user: super_admin_attributes },
+            valid_session
         site_admin_user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -259,7 +291,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'fails to update another content manager to super_admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: super_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -268,7 +302,9 @@ RSpec.describe UsersController, type: :controller do
 
       it 'fails to update another content manager to site_admin role' do
         user = FactoryGirl.create(:user, content_manager_attributes)
-        put :update, { id: user.to_param, user: site_admin_attributes }, valid_session
+        put :update,
+            { id: user.to_param, user: site_admin_attributes },
+            valid_session
         user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -276,7 +312,9 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it 'fails to update its own role to site_admin' do
-        put :update, { id: content_manager_user.to_param, user: site_admin_attributes }, valid_session
+        put :update,
+            { id: content_manager_user.to_param, user: site_admin_attributes },
+            valid_session
         content_manager_user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
@@ -284,7 +322,12 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it 'fails to update its own role to super_admin' do
-        put :update, { id: content_manager_user.to_param, user: super_admin_attributes }, valid_session
+        put :update,
+            {
+              id: content_manager_user.to_param,
+              user: super_admin_attributes
+            },
+            valid_session
         content_manager_user.reload
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))

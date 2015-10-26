@@ -42,7 +42,8 @@ RSpec.describe User, type: :model do
       end
 
       it 'includes content_manager' do
-        expect(super_admin_user.manageable_roles).to include(content_manager_role)
+        expect(super_admin_user.manageable_roles)
+          .to include(content_manager_role)
       end
     end
 
