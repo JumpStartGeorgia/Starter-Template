@@ -1,5 +1,11 @@
 en:
   devise:
+    mailer:
+      reset_password_instructions:
+        hello_email: Hello %{email}!
+        introduction: Someone has requested a link to change your password. You can do this through the link below.
+        did_not_request_note: If you didn't request this, please ignore this email.
+        password_will_not_change: Your password won't change until you access the link above and create a new one.
     passwords:
       new:
         send_reset_password_instructions: Send me reset password instructions
@@ -8,4 +14,3 @@ en:
         new_password: New password
         confirm_new_password: Confirm new password
         change_my_password: Change my password
-        
