@@ -18,6 +18,7 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require google-analytics-turbolinks
 
 ////////////////////////////////////////
 ///////  Load dependencies here  ///////

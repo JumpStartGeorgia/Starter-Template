@@ -56,6 +56,9 @@ gem 'font-awesome-sass', '~> 4.4.0'
 # Ruby server
 gem 'puma', '~> 2.11.1'
 
+# sends updates to google analytics when turbolinks changes page
+gem 'google-analytics-turbolinks', '~> 0.0.4'
+
 group :development do
   # Silences assets-related logging
   gem 'quiet_assets', '~> 1.0.3'
