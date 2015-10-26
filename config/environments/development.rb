@@ -1,5 +1,6 @@
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
+  # Settings specified here will take precedence over those in
+  # config/application.rb.
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -27,8 +28,8 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
-  # yet still be able to expire them through the digest params.
+  # Asset digests allow you to set far-future HTTP expiration dates on
+  # all assets, yet still be able to expire them through the digest params.
   config.assets.digest = true
 
   # Adds additional error checking when serving assets at runtime.
@@ -36,8 +37,8 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  # Rake precompile task puts precompiled assets in this directory in the public folder.
-  # Necessary for custom mina assets deploy setup.
+  # Rake precompile task puts precompiled assets in this directory in the
+  # public folder. Necessary for custom mina assets deploy setup.
   config.assets.prefix = '/assets'
 
   # Raises error for missing translations

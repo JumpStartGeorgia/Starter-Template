@@ -1,3 +1,4 @@
+# Controls user resource actions
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   authorize_resource
@@ -31,11 +32,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html do
-          redirect_to @user,
-                      notice: t('shared.msgs.success_created',
-                                obj: t('activerecord.models.user', count: 1))
-        end
+        redirect_to_created_user(format)
       else
         format.html { render :new }
       end
@@ -47,25 +44,9 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if user_params[:password].present?
-        if @user.update(user_params)
-          format.html do
-            redirect_to @user,
-                        notice: t('shared.msgs.success_updated',
-                                  obj: t('activerecord.models.user', count: 1))
-          end
-        else
-          format.html { render :edit }
-        end
+        update_user_with_password(format)
       else
-        if @user.update_without_password(user_params)
-          format.html do
-            redirect_to @user,
-                        notice: t('shared.msgs.success_updated',
-                                  obj: t('activerecord.models.user', count: 1))
-          end
-        else
-          format.html { render :edit }
-        end
+        update_user_without_password(format)
       end
     end
   end
@@ -90,12 +71,47 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
+  # Never trust parameters from the scary internet, only allow the
+  # white list through.
   def user_params
     params.require(:user).permit(:email, :password, :role_id)
   end
 
   def authorize_role_param
     not_authorized if cannot? :create, User.new(user_params)
+  end
+
+  def redirect_to_created_user(format)
+    format.html do
+      redirect_to @user,
+                  notice: t('shared.msgs.success_created',
+                            obj: t('activerecord.models.user', count: 1))
+    end
+  end
+  private :redirect_to_created_user
+
+  def update_user_with_password(format)
+    if @user.update(user_params)
+      format.html do
+        redirect_to @user,
+                    notice: t('shared.msgs.success_updated',
+                              obj: t('activerecord.models.user', count: 1))
+      end
+    else
+      format.html { render :edit }
+    end
+  end
+  private :update_user_with_password
+
+  def update_user_without_password(format)
+    if @user.update_without_password(user_params)
+      format.html do
+        redirect_to @user,
+                    notice: t('shared.msgs.success_updated',
+                              obj: t('activerecord.models.user', count: 1))
+      end
+    else
+      format.html { render :edit }
+    end
   end
 end

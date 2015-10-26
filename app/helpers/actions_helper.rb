@@ -26,14 +26,16 @@ module ActionsHelper
 
   def edit_button(object)
     link_to t('shared.actions.with_obj.edit',
-              obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+              obj: t("activerecord.models.#{object.model_name.singular}",
+                     count: 1)),
             [:edit, object],
             class: 'btn btn-default'
   end
 
   def destroy_button(object)
     link_to t('shared.actions.with_obj.destroy',
-              obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+              obj: t("activerecord.models.#{object.model_name.singular}",
+                     count: 1)),
             object,
             method: :delete,
             data: { confirm: t('shared.prompts.confirm') },
