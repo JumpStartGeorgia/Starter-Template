@@ -38,7 +38,7 @@ RSpec.describe 'User', type: :feature do
   end
 
   describe 'super_admin' do
-    it "can update another super_admin's email and role without updating password" do
+    it "can update another super_admin's email and role" do
       login_as super_admin_user1, scope: :user
 
       visit edit_user_path(super_admin_user2)
@@ -99,11 +99,13 @@ RSpec.describe 'User', type: :feature do
       expect(page).to have_content('Signed in successfully.')
     end
 
-    it 'can only select site_admin and content_manager in the Roles select on the user create page' do
+    it 'can only select site_admin and content_manager on create user form' do
       login_as site_admin_user, scope: :user
 
       visit new_user_path
-      expect(page).to have_select 'Role', options: [site_admin_role.name, content_manager_role.name]
+      expect(page).to have_select 'Role',
+                                  options: [site_admin_role.name,
+                                            content_manager_role.name]
     end
 
     it 'can create a content_manager user' do
@@ -140,7 +142,8 @@ RSpec.describe 'User', type: :feature do
       end
 
       click_button 'Update'
-      expect(page).to have_content('Your account has been updated successfully.')
+      expect(page)
+        .to have_content('Your account has been updated successfully.')
 
       find('#user-dropdown').click
       click_on 'Logout'
