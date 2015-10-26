@@ -4,14 +4,24 @@ require 'cancan/matchers'
 describe 'User' do
   let(:super_admin_role) { FactoryGirl.create(:role, name: 'super_admin') }
   let(:site_admin_role) { FactoryGirl.create(:role, name: 'site_admin') }
-  let(:content_manager_role) { FactoryGirl.create(:role, name: 'content_manager') }
+
+  let(:content_manager_role) do
+    FactoryGirl.create(:role, name: 'content_manager')
+  end
 
   let(:super_admin_user) { FactoryGirl.create(:user, role: super_admin_role) }
   let(:super_admin_user2) { FactoryGirl.create(:user, role: super_admin_role) }
   let(:site_admin_user) { FactoryGirl.create(:user, role: site_admin_role) }
   let(:site_admin_user2) { FactoryGirl.create(:user, role: site_admin_role) }
-  let(:content_manager_user) { FactoryGirl.create(:user, role: content_manager_role) }
-  let(:content_manager_user2) { FactoryGirl.create(:user, role: content_manager_role) }
+
+  let(:content_manager_user) do
+    FactoryGirl.create(:user, role: content_manager_role)
+  end
+
+  let(:content_manager_user2) do
+    FactoryGirl.create(:user, role: content_manager_role)
+  end
+
   let(:visitor) { nil }
 
   describe 'when is super admin' do
