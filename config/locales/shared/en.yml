@@ -2,11 +2,11 @@
 en:
   shared:
     actions:
+      change_my_password: Change my password
       destroy: Delete
       edit: Edit
       log_in: Log in
       view: View
-      change_my_password: Change my password
       with_obj:
         cancel: Cancel %{obj}
         create: Create %{obj}
@@ -17,8 +17,8 @@ en:
         view: View %{obj}
         view_all: View All %{obj}
     common:
-      actions: Actions
       account: Account
+      actions: Actions
       name: Rails Starter Template
     locale:
       short:
