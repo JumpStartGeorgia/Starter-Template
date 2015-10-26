@@ -13,3 +13,8 @@ en:
         change_your_password: Change your password
         new_password: New password
         confirm_new_password: Confirm new password
+    registrations:
+      edit:
+        hints:
+          leave_password_blank: leave blank if you don't want to change it
+          current_password_required: we need your current password to confirm your changes
