@@ -1,5 +1,4 @@
 require 'json'
-require 'pry-byebug'
 
 describe 'rubocop' do
   let!(:rubocop_json) { JSON.parse(`rubocop --format json`) }
