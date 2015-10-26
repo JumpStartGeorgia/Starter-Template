@@ -9,13 +9,16 @@
     <%= f.input :password,
                 as: :password,
                 label: t('.password'),
+                required: false,
                 hint: "(#{t '.hints.leave_password_blank'})" %>
     <%= f.input :password_confirmation,
                 as: :password,
-                label: t('.password_confirmation') %>
+                label: t('.password_confirmation'),
+                required: false %>
     <%= f.input :current_password,
                 as: :password,
                 label: t('.current_password'),
+                required: true,
                 hint: "(#{t '.hints.current_password_required'})" %>
   <% end %>
 
