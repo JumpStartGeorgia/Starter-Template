@@ -3,8 +3,10 @@ source 'https://rubygems.org'
 #####################################################################
 ##################### Starter Template Gems #########################
 
+# The framework! :)
 gem 'rails', '4.2.2'
 
+# Connection to MySql database
 gem 'mysql2', '~> 0.3.18'
 
 # SCSS parsing in asset pipeline
@@ -13,14 +15,14 @@ gem 'sass-rails', '~> 5.0'
 # CSS and JS compression for production
 gem 'uglifier', '>= 1.3.0'
 
+# Makes jQuery available in rails JS
 gem 'jquery-rails', '~> 4.0.3'
 
 # Uses caching to improve performance for internal page changes
 gem 'turbolinks', '~> 2.5.3'
 
+# JSON creation
 gem 'jbuilder', '~> 2.0'
-
-gem 'bcrypt', '~> 3.1.7'
 
 # Stores project secrets in environment variables
 gem 'dotenv-rails', '~> 2.0.0'
@@ -28,17 +30,22 @@ gem 'dotenv-rails', '~> 2.0.0'
 # Makes compatibility easier for jQuery and turbolinks
 gem 'jquery-turbolinks', '~> 2.1.0'
 
+# Makes jQuery UI (like jQuery datepicker) available
 gem 'jquery-ui-rails', '~> 5.0.3'
 
 # Simplifies form creation
 gem 'formtastic', '~> 3.1.3'
 
+# JavaScript interpreter
 gem 'therubyracer', '~> 0.12.1'
 
+# Needed for twitter-bootstrap-rails gem
 gem 'less-rails', '~> 2.7.0'
 
+# Bootstrap JS and various bootstrap-related generators/helpers
 gem 'twitter-bootstrap-rails', '~> 3.2.0'
 
+# Use formtastic to generate bootstrap-styled forms
 gem 'formtastic-bootstrap', '~> 3.1.0'
 
 # Authentication
@@ -83,8 +90,10 @@ group :development, :test do
   # Debugging: write 'binding.pry' in Ruby code to debug in terminal
   gem 'pry-byebug', '~> 3.1.0'
 
+  # Adds a console to application errors in browser
   gem 'web-console', '~> 2.0'
 
+  # Rails app preloader; runs app in background to speed up dev environment
   gem 'spring', '~> 1.3.5'
 
   # Specification testing
@@ -97,11 +106,13 @@ group :development, :test do
   # Easy data creation in tests
   gem 'factory_girl_rails', '~> 4.5.0'
 
+  # Testing API for Rack apps
   gem 'rack-test', '0.6.2'
 
   # Feature testing
   gem 'capybara', '~> 2.4.4'
 
+  # Can launch browser in case of feature spec errors
   gem 'launchy', '~> 2.4.3'
 
   # Web driver for feature tests
