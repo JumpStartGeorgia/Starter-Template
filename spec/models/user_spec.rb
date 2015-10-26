@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let!(:super_admin_role) { FactoryGirl.create(:role, name: 'super_admin') }
   let!(:site_admin_role) { FactoryGirl.create(:role, name: 'site_admin') }
-  let!(:content_manager_role) { FactoryGirl.create(:role, name: 'content_manager') }
+  let!(:content_manager_role) do
+    FactoryGirl.create(:role, name: 'content_manager')
+  end
 
   let(:new_user) { FactoryGirl.build(:user) }
 
@@ -50,7 +52,8 @@ RSpec.describe User, type: :model do
       end
 
       it 'does not include super_admin' do
-        expect(site_admin_user.manageable_roles).not_to include(super_admin_role)
+        expect(site_admin_user.manageable_roles)
+          .not_to include(super_admin_role)
       end
 
       it 'includes site_admin' do
@@ -58,7 +61,8 @@ RSpec.describe User, type: :model do
       end
 
       it 'includes content_manager' do
-        expect(site_admin_user.manageable_roles).to include(content_manager_role)
+        expect(site_admin_user.manageable_roles)
+          .to include(content_manager_role)
       end
     end
 
@@ -68,15 +72,18 @@ RSpec.describe User, type: :model do
       end
 
       it 'does not include super_admin' do
-        expect(content_manager_user.manageable_roles).not_to include(super_admin_role)
+        expect(content_manager_user.manageable_roles)
+          .not_to include(super_admin_role)
       end
 
       it 'does not include site_admin' do
-        expect(content_manager_user.manageable_roles).not_to include(site_admin_role)
+        expect(content_manager_user.manageable_roles)
+          .not_to include(site_admin_role)
       end
 
       it 'does not include content_manager' do
-        expect(content_manager_user.manageable_roles).not_to include(content_manager_role)
+        expect(content_manager_user.manageable_roles)
+          .not_to include(content_manager_role)
       end
     end
   end
