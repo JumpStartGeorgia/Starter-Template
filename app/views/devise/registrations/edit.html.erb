@@ -1,33 +1,28 @@
 <% page_title t('shared.actions.with_obj.edit',
                 obj: t('shared.common.account')) %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= semantic_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
+  <%= f.inputs do %>
+    <%= f.input :email, as: :email %>
+    <%= f.input :password,
+                as: :password,
+                hint: "(#{t '.hints.leave_password_blank'})" %>
+    <%= f.input :password_confirmation,
+                as: :password %>
+    <%= f.input :current_password,
+                as: :password,
+                hint: "(#{t '.hints.current_password_required'})" %>
+  <% end %>
 
-  <div class="field">
-    <%= f.label :password %> <i>(<%= t('.hints.leave_password_blank') %>)</i><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(<%= t('.hints.current_password_required') %>)</i><br />
-    <%= f.password_field :current_password, autocomplete: "off" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit t('shared.actions.with_obj.update',
-                   obj: t('shared.common.account')) %>
-  </div>
+  <%= f.actions do %>
+    <%= f.action :submit,
+                 as: :input,
+                 label: t('shared.actions.with_obj.update',
+                          obj: t('shared.common.account')),
+                 button_html: { class: 'btn btn-success' } %>
+  <% end %>
 <% end %>
 
 <p>
@@ -35,5 +30,6 @@
                   obj: t('shared.common.account')),
                 registration_path(resource_name),
                 data: { confirm: t('shared.prompts.confirm') },
-                method: :delete %>
+                method: :delete,
+                class: 'btn btn-danger' %>
 </p>
