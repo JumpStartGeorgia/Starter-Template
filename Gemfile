@@ -129,6 +129,9 @@ group :development, :test do
 
   # Feature testing for emails
   gem 'capybara-email', '~> 2.4'
+
+  # Ruby code style
+  gem 'rubocop', '~> 0.31.0'
 end
 
 #####################################################################
