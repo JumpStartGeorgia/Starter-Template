@@ -6,6 +6,7 @@ en:
       edit: Edit
       log_in: Log in
       view: View
+      change_my_password: Change my password
       with_obj:
         create: Create %{obj}
         destroy: Delete %{obj}
