@@ -15,6 +15,9 @@ en:
         confirm_new_password: Confirm new password
     registrations:
       edit:
+        password: Password
+        current_password: Current password
+        password_confirmation: Password confirmation
         hints:
           leave_password_blank: leave blank if you don't want to change it
           current_password_required: we need your current password to confirm your changes
