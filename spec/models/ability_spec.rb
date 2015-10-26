@@ -70,6 +70,6 @@ describe 'User' do
 
     it 'cannot update content manager' do
       expect(ability).not_to be_able_to(:update, content_manager_user)
-    end 
+    end
   end
 end
