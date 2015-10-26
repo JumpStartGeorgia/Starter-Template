@@ -168,7 +168,21 @@ RSpec.describe 'User', type: :feature do
 
       open_email(content_manager_user.email)
 
-      expect(current_email).to have_content 'Change my password'
+      current_email.click_link 'Change my password'
+
+      fill_in 'New password', with: new_content_manager_password
+      fill_in 'Confirm new password', with: new_content_manager_password
+
+      click_on 'Change my password'
+
+      visit new_user_session_path
+      within('#new_user') do
+        fill_in 'Email', with: content_manager_user.email
+        fill_in 'Password', with: new_content_manager_password
+      end
+
+      click_on 'Log in'
+      expect(page).to have_content('Signed in successfully.')
     end
   end
 end
