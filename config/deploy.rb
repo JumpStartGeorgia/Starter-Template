@@ -154,8 +154,8 @@ namespace :nginx do
   task :create_symlink do |task|
     system %(echo "")
     system %(echo "Creating Nginx symlink: #{nginx_symlink} ===> #{nginx_conf}")
-    system %(#{sudo_ssh_cmd(task)} 'sudo ln -nfs #{nginx_conf}
-               #{nginx_symlink}')
+    system %(#{sudo_ssh_cmd(task)} 'sudo ln -nfs #{nginx_conf} \
+      #{nginx_symlink}')
     system %(echo "")
   end
 
@@ -212,15 +212,14 @@ namespace :puma do
 
   desc 'Start puma'
   task start: :environment do
-    # rubocop:disable LineLength
     queue %(
       if [ -e '#{pumactl_socket}' ]; then
         echo 'Puma is already running!';
       else
-        cd #{deploy_to}/#{current_path} && #{puma_cmd} -q -d -e #{puma_env} -C #{puma_conf}
+        cd #{deploy_to}/#{current_path} && #{puma_cmd} -q -d -e #{puma_env} \
+          -C #{puma_conf}
       fi
         )
-    # rubocop:enable LineLength
   end
 
   desc 'Stop puma'
@@ -243,15 +242,14 @@ namespace :puma do
 
   desc 'Restart puma (phased restart)'
   task phased_restart: :environment do
-    # rubocop:disable LineLength
     queue %(
       if [ -e '#{pumactl_socket}' ]; then
-        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F #{puma_conf} phased-restart
+        cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -F \
+          #{puma_conf} phased-restart
       else
         echo 'Puma is not running!';
       fi
         )
-    # rubocop:enable LineLength
   end
 
   desc 'View status of puma server'
@@ -281,7 +279,7 @@ namespace :puma do
     task :add do |task|
       system %(echo "")
       system %(echo "Adding application to puma jungle at /etc/puma.conf")
-      system %(#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to}
+      system %(#{sudo_ssh_cmd(task)} 'sudo /etc/init.d/puma add #{deploy_to} \
                  #{user} #{puma_conf} #{puma_log}')
       system %(echo "")
     end
@@ -290,7 +288,7 @@ namespace :puma do
     task :remove do |task|
       system %(echo "")
       system %(echo "Removing application from puma jungle at /etc/puma.conf")
-      system %(#{sudo_ssh_cmd(task)}
+      system %(#{sudo_ssh_cmd(task)} \
                  'sudo /etc/init.d/puma remove #{deploy_to}')
       system %(echo "")
     end
@@ -344,8 +342,8 @@ namespace :git do
     puts diff
   end
 
-  desc 'Remove FETCH_HEAD file containing currently deployed git commit hash;'\
-       ' this will force user to precompile on next deploy'
+  desc 'Remove FETCH_HEAD file containing currently deployed git commit hash; '\
+       'this will force user to precompile on next deploy'
   task :remove_fetch_head do
     queue %(
       echo '-----> Removing #{fetch_head}'
@@ -414,8 +412,8 @@ namespace :deploy do
           system %(echo "")
           exit
         else
-          git_diff = `git diff --name-only #{deployed_commit}..#{current_commit}
-                        #{asset_files_directories}`
+          git_diff = `git diff --name-only \
+          #{deployed_commit}..#{current_commit} #{asset_files_directories}`
 
           # If git diff length is not 0, then either 1) the assets have
           # changed or 2) git cannot recognize the deployed commit and
@@ -432,23 +430,23 @@ namespace :deploy do
     desc 'Precompile assets locally and rsync to tmp/assets folder on server.'
     task :local_precompile do
       system %(echo "-----> Cleaning assets locally")
-      system %(RAILS_ENV=#{rails_env} bundle exec
+      system %(RAILS_ENV=#{rails_env} bundle exec \
                  rake assets:clean RAILS_GROUPS=assets)
 
       system %(echo "-----> Precompiling assets locally")
-      system %(RAILS_ENV=#{rails_env} bundle exec
+      system %(RAILS_ENV=#{rails_env} bundle exec \
                  rake assets:precompile RAILS_GROUPS=assets)
 
-      system %[echo "-----> RSyncing remote assets (tmp/assets)
+      system %[echo "-----> RSyncing remote assets (tmp/assets) \
                      with local assets (#{precompiled_assets_dir})"]
 
-      system %(rsync #{rsync_verbose} -e 'ssh -p #{ssh_port}'
-                 --recursive --times --delete ./#{precompiled_assets_dir}/.
+      system %(rsync #{rsync_verbose} -e 'ssh -p #{ssh_port}' \
+                 --recursive --times --delete ./#{precompiled_assets_dir}/. \
                  #{user}@#{domain}:#{deploy_to}/tmp/assets)
     end
 
     task :copy_tmp_to_current do
-      queue %(echo "-----> Copying assets from
+      queue %(echo "-----> Copying assets from \
                     tmp/assets to current/#{precompiled_assets_dir}")
       queue! %(cp -a #{deploy_to}/tmp/assets/. ./#{precompiled_assets_dir})
     end
@@ -457,7 +455,7 @@ namespace :deploy do
       queue %(echo "-----> Replacing tmp/assets with")
       queue %(echo " current/#{precompiled_assets_dir}")
       queue! %(rm -r #{deploy_to}/tmp/assets)
-      queue! %(cp -a #{full_current_path}/#{precompiled_assets_dir}/.
+      queue! %(cp -a #{full_current_path}/#{precompiled_assets_dir}/. \
                  #{deploy_to}/tmp/assets)
     end
   end
@@ -473,7 +471,7 @@ task setup: :environment do
   end
 
   unless env_exists
-    system %(scp -P #{ssh_port} .env.example
+    system %(scp -P #{ssh_port} .env.example \
                #{user}@#{domain}:#{temp_env_example_path})
   end
 
