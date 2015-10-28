@@ -7,7 +7,7 @@
     <%= render partial: 'application/main' %>
     <%= render partial: 'application/footer' %>
 
-    <% if Rails.env.production? %>
+    <% if Rails.env.staging? %>
       <%= render partial: 'application/google_analytics' %>
     <% end %>
 
