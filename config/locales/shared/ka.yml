@@ -19,6 +19,8 @@ ka:
     common:
       account: Account
       actions: Actions
+      jumpstart:
+        slogan: JumpStart Georgia - We communicate data better!
       name: Rails-ის დასაწყისი მოდელი
     locale:
       short:
