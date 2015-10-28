@@ -170,6 +170,7 @@ RSpec.describe 'User', type: :feature do
       click_on 'Send me reset password instructions'
 
       open_email(content_manager_user.email)
+      expect(current_email.from).to eq(ENV['APPLICATION_FEEDBACK_FROM_EMAIL'])
 
       current_email.click_link 'Change my password'
 
