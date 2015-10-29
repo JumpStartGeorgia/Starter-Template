@@ -66,6 +66,9 @@ gem 'puma', '~> 2.11.1'
 # sends updates to google analytics when turbolinks changes page
 gem 'google-analytics-turbolinks', '~> 0.0.4'
 
+# Sends email when exception or error is thrown
+gem 'exception_notification', '~> 4.1', '>= 4.1.1'
+
 group :development do
   # Silences assets-related logging
   gem 'quiet_assets', '~> 1.0.3'
