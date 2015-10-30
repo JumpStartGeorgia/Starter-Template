@@ -96,6 +96,18 @@ namespace :maintenance do
   task :disable do
     queue! "mv #{enabled_maintenance} #{disabled_maintenance}"
   end
+
+  desc 'Check if maintenance is enabled'
+  task :status do
+    queue! %(
+    if [ -f #{enabled_maintenance} ];
+      then
+         echo "Maintenance is enabled."
+      else
+         echo "Maintenance is disabled."
+      fi
+    )
+  end
 end
 
 namespace :rails do
