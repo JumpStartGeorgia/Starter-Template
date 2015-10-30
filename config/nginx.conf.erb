@@ -38,7 +38,7 @@ server {
   add_header X-Content-Type-Options nosniff;
 
   # This header enables the Cross-site scripting (XSS) filter built into most recent web browsers.
-  # It is usually enabled by default anyway, so the role of this header is to re-enable the filter for 
+  # It is usually enabled by default anyway, so the role of this header is to re-enable the filter for
   # this particular website if it was disabled by the user.
   # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
   add_header X-XSS-Protection "1; mode=block";
@@ -88,19 +88,21 @@ server {
     root html;
   }
 
-  location @503 {
-    error_page 405 = /system/maintenance.html;
-    if (-f $document_root/system/maintenance.html) {
-      rewrite ^(.*)$ /system/maintenance.html break;
-    }
-    rewrite ^(.*)$ /503.html break;
-  }
-
   if ($request_method !~ ^(GET|HEAD|PUT|POST|DELETE)$ ){
     return 405;
   }
 
-  if (-f $document_root/system/maintenance.html) {
+  # Rename public/maintenance_disabled.html to public/maintenance.html
+  # to make all site requests redirect to the maintenance page.
+  location @503 {
+    error_page 405 = /maintenance.html;
+    if (-f $document_root/maintenance.html) {
+      rewrite ^(.*)$ /maintenance.html break;
+    }
+    rewrite ^(.*)$ /503.html break;
+  }
+
+  if (-f $document_root/maintenance.html) {
     return 503;
   }
 
