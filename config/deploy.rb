@@ -78,7 +78,9 @@ set :fetch_head, -> { "#{deploy_to}/scm/FETCH_HEAD" }
 
 # Maintenance file locations
 set :enabled_maintenance, -> { "#{full_current_path}/public/maintenance.html" }
-set :disabled_maintenance, -> { "#{full_current_path}/public/maintenance_disabled.html" }
+set :disabled_maintenance, lambda {
+  "#{full_current_path}/public/maintenance_disabled.html"
+}
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
