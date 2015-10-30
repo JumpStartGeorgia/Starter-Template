@@ -92,6 +92,9 @@ server {
     return 405;
   }
 
+  ###########################################
+  # Maintenance
+
   # Rename public/maintenance_disabled.html to public/maintenance.html
   # to make all site requests redirect to the maintenance page.
   location @503 {
@@ -105,6 +108,8 @@ server {
   if (-f $document_root/maintenance.html) {
     return 503;
   }
+
+  ###########################################
 
   location ~ \.(php|html)$ {
     return 405;

@@ -129,21 +129,28 @@ server {
     root html;
   }
 
-  location @503 {
-    error_page 405 = /system/maintenance.html;
-    if (-f $document_root/system/maintenance.html) {
-      rewrite ^(.*)$ /system/maintenance.html break;
-    }
-    rewrite ^(.*)$ /503.html break;
-  }
-
   if ($request_method !~ ^(GET|HEAD|PUT|POST|DELETE)$ ){
     return 405;
   }
 
-  if (-f $document_root/system/maintenance.html) {
+  ###########################################
+  # Maintenance
+
+  # Rename public/maintenance_disabled.html to public/maintenance.html
+  # to make all site requests redirect to the maintenance page.
+  location @503 {
+    error_page 405 = /maintenance.html;
+    if (-f $document_root/maintenance.html) {
+      rewrite ^(.*)$ /maintenance.html break;
+    }
+    rewrite ^(.*)$ /503.html break;
+  }
+
+  if (-f $document_root/maintenance.html) {
     return 503;
   }
+
+  ###########################################
 
   location ~ \.(php|html)$ {
     return 405;
