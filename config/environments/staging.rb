@@ -81,8 +81,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Recommended by Devise
+  # Sets the domain used in email links
   config.action_mailer.default_url_options = {
-    host: 'dev-rails4-deploy.jumpstart.ge'
+    host: ENV['STAGING_WEB_URL']
   }
 end

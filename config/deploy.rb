@@ -1,3 +1,7 @@
+# load .env variables
+require 'dotenv'
+Dotenv.load
+
 require 'erb'
 require 'mina/multistage'
 require 'mina/bundler'
