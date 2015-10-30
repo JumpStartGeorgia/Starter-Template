@@ -13,7 +13,9 @@ Rails.application.routes.draw do
                },
                constraints: { format: :html }
 
-    resources :users, constraints: { format: :html }
+    scope '/admin' do
+      resources :users, constraints: { format: :html }
+    end
 
     root 'root#index'
     get '/about' => 'root#about'
