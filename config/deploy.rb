@@ -91,12 +91,28 @@ end
 namespace :maintenance do
   desc 'Redirect all incoming traffic to public/maintenance.html'
   task :enable do
-    queue! "mv #{disabled_maintenance} #{enabled_maintenance}"
+    queue! %(
+    if [ -f #{enabled_maintenance} ];
+      then
+        echo "Maintenance is already enabled."
+      else
+        mv #{disabled_maintenance} #{enabled_maintenance}
+        echo "Maintenance has been enabled."
+      fi
+    )
   end
 
   desc 'Stop redirecting traffic to public/maintenance.html'
   task :disable do
-    queue! "mv #{enabled_maintenance} #{disabled_maintenance}"
+    queue! %(
+    if [ -f #{disabled_maintenance} ];
+      then
+        echo "Maintenance is already disabled."
+      else
+        mv #{enabled_maintenance} #{disabled_maintenance}
+        echo "Maintenance has been disabled."
+      fi
+    )
   end
 
   desc 'Check if maintenance is enabled'
