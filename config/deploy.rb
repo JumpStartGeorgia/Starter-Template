@@ -8,6 +8,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
+require_relative 'deploy_helpers/maintenance'
 
 set :user_path, -> { "/home/#{user}" }
 set :deploy_to, -> { "#{user_path}/#{application}" }
@@ -75,40 +76,6 @@ set :shared_env_path, -> { "#{full_shared_path}/.env" }
 
 # Fetch Head location: this file contains the currently deployed git commit hash
 set :fetch_head, -> { "#{deploy_to}/scm/FETCH_HEAD" }
-
-# Maintenance file locations
-set :enabled_maintenance, -> { "#{full_current_path}/public/maintenance.html" }
-set :disabled_maintenance, -> { "#{full_current_path}/public/maintenance_disabled.html" }
-
-# This task is the environment that is loaded for most commands, such as
-# `mina deploy` or `mina rake`.
-task :environment do
-  invoke :'rbenv:load'
-end
-
-namespace :maintenance do
-  desc 'Redirect all incoming traffic to public/maintenance.html'
-  task :enable do
-    queue! "mv #{disabled_maintenance} #{enabled_maintenance}"
-  end
-
-  desc 'Stop redirecting traffic to public/maintenance.html'
-  task :disable do
-    queue! "mv #{enabled_maintenance} #{disabled_maintenance}"
-  end
-
-  desc 'Check if maintenance is enabled'
-  task :status do
-    queue! %(
-    if [ -f #{enabled_maintenance} ];
-      then
-         echo "Maintenance is enabled."
-      else
-         echo "Maintenance is disabled."
-      fi
-    )
-  end
-end
 
 namespace :rails do
   desc "Opens the deployed application's .env file in vim for editing"
