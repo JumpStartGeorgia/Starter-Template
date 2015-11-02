@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :routing do
+RSpec.describe Admin::UsersController, type: :routing do
   describe 'routing' do
     it 'routes to #index' do
       expect(get: admin_users_path).to route_to('users#index', locale: 'en')

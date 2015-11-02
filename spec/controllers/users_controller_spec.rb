@@ -18,7 +18,7 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe UsersController, type: :controller do
+RSpec.describe Admin::UsersController, type: :controller do
   let(:content_manager_role) do
     FactoryGirl.create(:role, name: 'content_manager')
   end
