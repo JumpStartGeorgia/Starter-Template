@@ -102,7 +102,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
         it 'redirects to the created user' do
           post :create, { user: valid_attributes }, valid_session
-          expect(response).to redirect_to(User.last)
+          expect(response).to redirect_to([:admin, User.last])
         end
       end
 
@@ -146,7 +146,7 @@ RSpec.describe Admin::UsersController, type: :controller do
           put :update,
               { id: user.to_param, user: valid_attributes },
               valid_session
-          expect(response).to redirect_to(user)
+          expect(response).to redirect_to([:admin, user])
         end
       end
 
@@ -211,7 +211,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: super_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(user)
+        expect(response).to redirect_to([:admin, user])
         expect(user.role.name).to eq('super_admin')
       end
 
@@ -221,7 +221,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: site_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(user)
+        expect(response).to redirect_to([:admin, user])
         expect(user.role.name).to eq('site_admin')
       end
 
@@ -231,7 +231,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: super_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(user)
+        expect(response).to redirect_to([:admin, user])
         expect(user.role.name).to eq('super_admin')
       end
     end
@@ -269,7 +269,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: site_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(user)
+        expect(response).to redirect_to([:admin, user])
         expect(user.role.name).to eq('site_admin')
       end
 
