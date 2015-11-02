@@ -1,5 +1,6 @@
 ---
 ka:
-  users:
-    show:
-      title: "%{user_model_name}: %{user_email}"
+  admin:
+    users:
+      show:
+        title: "%{user_model_name}: %{user_email}"
