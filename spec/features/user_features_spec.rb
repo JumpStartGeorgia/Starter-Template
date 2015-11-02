@@ -41,7 +41,7 @@ RSpec.describe 'User', type: :feature do
     it "can update another super_admin's email and role" do
       login_as super_admin_user1, scope: :user
 
-      visit edit_user_path(super_admin_user2)
+      visit edit_admin_user_path(super_admin_user2)
       within('.inputs') do
         fill_in 'Email', with: 'asdfsdfs@dsafdsf.com'
         select('content_manager', from: 'Role')
@@ -54,7 +54,7 @@ RSpec.describe 'User', type: :feature do
     it "can update another super_admin's email, password and role" do
       login_as super_admin_user1, scope: :user
 
-      visit edit_user_path(super_admin_user2)
+      visit edit_admin_user_path(super_admin_user2)
       within('.inputs') do
         fill_in 'Email', with: 'asdfsdfs@dsafdsf.com'
         fill_in 'Password', with: 'asdfsdfdsflkjk;l'
@@ -77,7 +77,7 @@ RSpec.describe 'User', type: :feature do
       click_on 'Log in'
       expect(page).to have_content('Signed in successfully.')
 
-      visit edit_user_path(content_manager_user)
+      visit edit_admin_user_path(content_manager_user)
       within('.inputs') do
         fill_in 'Password', with: new_content_manager_password
       end
@@ -102,7 +102,7 @@ RSpec.describe 'User', type: :feature do
     it 'can only select site_admin and content_manager on create user form' do
       login_as site_admin_user, scope: :user
 
-      visit new_user_path
+      visit new_admin_user_path
       expect(page).to have_select 'Role',
                                   options: [site_admin_role.name,
                                             content_manager_role.name]
@@ -110,7 +110,7 @@ RSpec.describe 'User', type: :feature do
 
     it 'can create a content_manager user' do
       login_as site_admin_user, scope: :user
-      visit new_user_path
+      visit new_admin_user_path
 
       within('#new_user') do
         fill_in 'Email', with: 'dasfkjdsfajk@fdjkslfajds.com'

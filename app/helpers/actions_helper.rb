@@ -1,10 +1,10 @@
 # Action button helpers, i.e. to easily create a 'Show User' button
 module ActionsHelper
-  def view_button(object)
+  def view_button(object, link_path = object)
     link_to t('shared.actions.with_obj.view',
               obj: t("activerecord.models.#{object.model_name.singular}",
                      count: 1)),
-            object,
+            link_path,
             class: 'btn btn-default'
   end
 
@@ -24,19 +24,19 @@ module ActionsHelper
             class: 'btn btn-primary'
   end
 
-  def edit_button(object)
+  def edit_button(object, link_path = [:edit, object])
     link_to t('shared.actions.with_obj.edit',
               obj: t("activerecord.models.#{object.model_name.singular}",
                      count: 1)),
-            [:edit, object],
+            link_path,
             class: 'btn btn-default'
   end
 
-  def destroy_button(object)
+  def destroy_button(object, link_path = object)
     link_to t('shared.actions.with_obj.destroy',
               obj: t("activerecord.models.#{object.model_name.singular}",
                      count: 1)),
-            object,
+            link_path,
             method: :delete,
             data: { confirm: t('shared.prompts.confirm') },
             class: 'btn btn-danger'

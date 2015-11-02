@@ -84,7 +84,7 @@ module Admin
 
     def redirect_to_created_user(format)
       format.html do
-        redirect_to @user,
+        redirect_to [:admin, @user],
                     notice: t('shared.msgs.success_created',
                               obj: t('activerecord.models.user', count: 1))
       end
@@ -94,7 +94,7 @@ module Admin
     def update_user_with_password(format)
       if @user.update(user_params)
         format.html do
-          redirect_to @user,
+          redirect_to [:admin, @user],
                       notice: t('shared.msgs.success_updated',
                                 obj: t('activerecord.models.user', count: 1))
         end
@@ -107,7 +107,7 @@ module Admin
     def update_user_without_password(format)
       if @user.update_without_password(user_params)
         format.html do
-          redirect_to @user,
+          redirect_to [:admin, @user],
                       notice: t('shared.msgs.success_updated',
                                 obj: t('activerecord.models.user', count: 1))
         end
