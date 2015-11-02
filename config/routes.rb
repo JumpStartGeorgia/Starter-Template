@@ -13,7 +13,7 @@ Rails.application.routes.draw do
                },
                constraints: { format: :html }
 
-    scope '/admin' do
+    namespace :admin do
       resources :users, constraints: { format: :html }
     end
 
