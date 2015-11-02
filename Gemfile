@@ -92,16 +92,7 @@ group :development do
   gem 'awesome_print', '~> 1.6', '>= 1.6.1'
 end
 
-group :development, :test do
-  # Debugging: write 'binding.pry' in Ruby code to debug in terminal
-  gem 'pry-byebug', '~> 3.1.0'
-
-  # Adds a console to application errors in browser
-  gem 'web-console', '~> 2.0'
-
-  # Rails app preloader; runs app in background to speed up dev environment
-  gem 'spring', '~> 1.3.5'
-
+group :test do
   # Specification testing
   gem 'rspec-rails', '~> 3.1.0'
 
@@ -135,6 +126,17 @@ group :development, :test do
 
   # Feature testing for emails
   gem 'capybara-email', '~> 2.4'
+end
+
+group :development, :test do
+  # Debugging: write 'binding.pry' in Ruby code to debug in terminal
+  gem 'pry-byebug', '~> 3.1.0'
+
+  # Adds a console to application errors in browser
+  gem 'web-console', '~> 2.0'
+
+  # Rails app preloader; runs app in background to speed up dev environment
+  gem 'spring', '~> 1.3.5'
 
   # Ruby code style
   gem 'rubocop', '~> 0.31.0'
