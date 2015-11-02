@@ -10,28 +10,28 @@ RSpec.describe 'Users', type: :request do
 
   describe 'GET /users' do
     it 'works' do
-      get users_path
+      get admin_users_path
       expect(response).to have_http_status(200)
     end
   end
 
   describe 'GET /users/1' do
     it 'works' do
-      get user_path(site_admin_user)
+      get admin_user_path(site_admin_user)
       expect(response).to have_http_status(200)
     end
   end
 
   describe 'GET /users/new' do
     it 'works' do
-      get new_user_path
+      get new_admin_user_path
       expect(response).to have_http_status(200)
     end
   end
 
   describe 'GET /users/1/edit' do
     it 'works' do
-      get edit_user_path(site_admin_user)
+      get edit_admin_user_path(site_admin_user)
       expect(response).to have_http_status(200)
     end
   end
