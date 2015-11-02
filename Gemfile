@@ -87,6 +87,9 @@ group :development do
 
   # Mina for multiple servers
   gem 'mina-multistage', '~> 1.0.1', require: false
+
+  # Prints arrays, hashes, etc. beautifully
+  gem 'awesome_print', '~> 1.6', '>= 1.6.1'
 end
 
 group :development, :test do
