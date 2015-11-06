@@ -8,8 +8,8 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
-require_relative 'deploy_helpers/maintenance'
-require_relative 'deploy_helpers/puma'
+require_relative 'deploy_modules/maintenance'
+require_relative 'deploy_modules/puma'
 
 set :user_path, -> { "/home/#{user}" }
 set :deploy_to, -> { "#{user_path}/#{application}" }
