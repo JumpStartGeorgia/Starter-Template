@@ -19,9 +19,9 @@ en:
     common:
       account: Account
       actions: Actions
-      name: Rails Starter Template
       jumpstart:
         slogan: JumpStart Georgia - We communicate data better!
+      name: Rails Starter Template
     locale:
       short:
         en: En
