@@ -330,8 +330,7 @@ task deploy: :environment do
         queue %(echo "--------------------- IMPORTANT ---------------------")
         queue %(echo "")
       else
-        invoke :'puma:stop'
-        invoke :'puma:start'
+        invoke :'puma:restart'
         invoke :finished_deploy_message
       end
     end
