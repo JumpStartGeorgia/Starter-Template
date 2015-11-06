@@ -166,6 +166,7 @@ GEM
       sprockets (> 2, < 4)
       tilt
     libv8 (3.16.14.7)
+    locales_export_import (0.4.2)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -354,6 +355,7 @@ DEPENDENCIES
   jquery-ui-rails (~> 5.0.3)
   launchy (~> 2.4.3)
   less-rails (~> 2.7.0)
+  locales_export_import (~> 0.4.2)
   mina (~> 0.3.3)
   mina-multistage (~> 1.0.1)
   mysql2 (~> 0.3.18)

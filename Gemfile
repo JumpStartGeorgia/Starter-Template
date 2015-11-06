@@ -90,6 +90,9 @@ group :development do
 
   # Prints arrays, hashes, etc. beautifully
   gem 'awesome_print', '~> 1.6', '>= 1.6.1'
+
+  # Export and import locale files to work with translators
+  gem 'locales_export_import', '~> 0.4.2'
 end
 
 group :test do
