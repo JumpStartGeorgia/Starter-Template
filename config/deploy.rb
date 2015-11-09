@@ -123,7 +123,7 @@ end
 namespace :git do
   desc 'Git diff local with server'
   task :diff_local do
-    diff = `git diff #{deployed_commit_hash}..#{local_commit_hash}`
+    diff = `git diff #{deployed_commit}..#{local_commit_hash}`
     puts diff
   end
 
@@ -179,9 +179,6 @@ namespace :deploy do
 
         current_commit = local_commit_hash
 
-        # Get deployed commit hash
-        deployed_commit = deployed_commit_hash
-
         # If FETCH_HEAD file does not exist or deployed_commit doesn't look
         # like a hash, ask user to force precompile
         if deployed_commit.nil? || deployed_commit.length != 40
@@ -197,16 +194,19 @@ namespace :deploy do
           system %(echo "")
           exit
         else
-          git_diff = `git diff --name-only \
-          #{deployed_commit}..#{current_commit} #{asset_files_directories}`
+          git_diff = diff_for_files_btw_commits(
+            deployed_commit,
+            current_commit,
+            asset_files_directories
+          )
 
           # If git diff length is not 0, then either 1) the assets have
           # changed or 2) git cannot recognize the deployed commit and
           # issues an error. In both these situations, precompile assets.
-          if git_diff.length == 0
-            system %(echo "-----> Assets unchanged; skipping precompile assets")
-          else
+          if git_diff.nil? || git_diff.length != 0
             set :precompile_assets, true
+          else
+            system %(echo "-----> Assets unchanged; skipping precompile assets")
           end
         end
       end
@@ -330,7 +330,27 @@ task deploy: :environment do
         queue %(echo "--------------------- IMPORTANT ---------------------")
         queue %(echo "")
       else
-        invoke :'puma:restart'
+        diff = diff_for_files_btw_commits(
+          deployed_commit,
+          local_commit_hash,
+          'db/schema.rb Gemfile.lock'
+        )
+
+        if diff.nil?
+          schema_or_gems_unchanged = false
+        else
+          schema_or_gems_unchanged = diff.length == 0
+        end
+
+        # If neither db schema nor Gemfile.lock have changed, it's safe
+        # to perform phased_restart. Otherwise, do a hot restart. See
+        # following link for difference between the two restarts:
+        # https://github.com/puma/puma#normal-vs-hot-vs-phased-restart
+        if schema_or_gems_unchanged
+          invoke :'puma:phased_restart'
+        else
+          invoke :'puma:restart'
+        end
         invoke :finished_deploy_message
       end
     end
@@ -405,6 +425,21 @@ def local_commit_hash
   `git rev-parse HEAD`.strip
 end
 
-def deployed_commit_hash
-  capture(%(cat #{fetch_head})).split(' ')[0]
+def deployed_commit
+  return deployed_commit_hash unless deployed_commit_hash.nil?
+
+  # Determine deployed commit hash if it hasn't been set yet
+  deployed_commit_hash = capture(%(cat #{fetch_head})).split(' ')[0]
+  if deployed_commit_hash.nil?
+    # If hash is nil, set it to empty string so that this code isn't run again
+    set :deployed_commit_hash, ''
+  else
+    set :deployed_commit_hash, deployed_commit_hash
+  end
+end
+
+def diff_for_files_btw_commits(commit1, commit2, files_dirs)
+  return nil if commit1.nil? || commit1 == ''
+  return nil if commit2.nil? || commit2 == ''
+  `git diff --name-only #{commit1}..#{commit2} #{files_dirs}`
 end
