@@ -46,6 +46,7 @@ namespace :puma do
   desc 'Restart puma'
   task restart: :environment do
     queue %(
+      echo "Running puma restart command"
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -S #{puma_state} \
           -F #{puma_conf} restart
@@ -58,6 +59,7 @@ namespace :puma do
   desc 'Restart puma (phased restart)'
   task phased_restart: :environment do
     queue %(
+      echo "Running puma phased_restart command"
       if [ -e '#{pumactl_socket}' ]; then
         cd #{deploy_to}/#{current_path} && #{pumactl_cmd} -S #{puma_state} \
           -F #{puma_conf} phased-restart
