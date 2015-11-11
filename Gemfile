@@ -142,7 +142,7 @@ group :development, :test do
   gem 'spring', '~> 1.3.5'
 
   # Ruby code style
-  gem 'rubocop', '~> 0.31.0'
+  gem 'rubocop', '~> 0.35.0'
 end
 
 #####################################################################
