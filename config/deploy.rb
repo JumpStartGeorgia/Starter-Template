@@ -159,9 +159,8 @@ namespace :deploy do
 
   desc 'Rollback in a puma- and assets-friendly manner'
   task :custom_rollback do
-    invoke :'puma:stop'
     invoke :'deploy:rollback'
-    invoke :'puma:start'
+    invoke :'puma:restart'
     invoke :'deploy:assets:copy_current_to_tmp'
     invoke :'git:remove_fetch_head'
   end
