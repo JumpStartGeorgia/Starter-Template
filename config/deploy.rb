@@ -2,6 +2,9 @@
 require 'dotenv'
 Dotenv.load
 
+# allows debugging with 'binding.pry'
+require 'pry-byebug'
+
 require 'erb'
 require 'mina/multistage'
 require 'mina/bundler'
