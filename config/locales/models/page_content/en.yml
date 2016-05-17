@@ -1,0 +1,12 @@
+---
+en:
+  activerecord:
+    attributes:
+      page_content:
+        content: Content
+        title: Title of Content Section (optional)
+        name: Unique Name
+    models:
+      page_content:
+        one: Page Content
+        other: Page Contents

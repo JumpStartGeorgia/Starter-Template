@@ -1,0 +1,29 @@
+<% show_name = (can? :create, @page_content) ? true : false %>
+
+<%
+page_title t('.title',
+             label: t('activerecord.attributes.page_content.title'),
+             label_value: @page_content.title)
+%>
+
+<div class='actions-container'>
+  <%= render partial: 'shared/show_actions',
+        locals: {
+          object: @page_content,
+          index_path: admin_page_contents_path,
+          show_path: admin_page_content_path,
+          edit_path: edit_admin_page_content_path
+                }
+  %>
+</div>
+
+<dl class="dl-horizontal">
+  <% if show_name %>
+    <dt><strong><%=t 'activerecord.attributes.page_content.name' %>:</strong></dt>
+    <dd><%= @page_content.name %></dd>
+  <% end %>
+  <dt><strong><%=t 'activerecord.attributes.page_content.title' %>:</strong></dt>
+  <dd><%= @page_content.title %></dd>
+  <dt><strong><%=t 'activerecord.attributes.page_content.content' %>:</strong></dt>
+  <dd><%= simple_format_no_tags(@page_content.content) %></dd>
+</dl>

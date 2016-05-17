@@ -3,8 +3,13 @@
                 obj: t('activerecord.models.user', count: 1)) %>
 
 <div class='actions'>
-  <%= view_button(@user, admin_user_path) %>
-  <%= view_all_button(@user) %>
+  <%= render partial: 'shared/edit_actions',
+        locals: {
+          object: @user,
+          show_path: admin_user_path(@user),
+          index_path: admin_users_path
+                }
+  %>
 </div>
 
 <%= render partial: 'form' %>

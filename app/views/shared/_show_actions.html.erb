@@ -1,0 +1,19 @@
+<%= render partial: 'shared/index_admin' %>
+<%= link_to t('shared.actions.with_obj.view_all',
+              obj: t("activerecord.models.#{object.model_name.singular}", count: 999)),
+            index_path,
+            class: 'btn btn-default' %>
+<%= if can? :edit, object
+  link_to t('shared.actions.with_obj.edit',
+            obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+          edit_path,
+          class: 'btn btn-default'
+end %>
+<%= if can? :destroy, object
+  link_to t('shared.actions.with_obj.destroy',
+            obj: t("activerecord.models.#{object.model_name.singular}", count: 1)),
+          show_path,
+          method: :delete,
+          data: { confirm: t('shared.prompts.confirm') },
+          class: 'btn btn-danger'
+end %>

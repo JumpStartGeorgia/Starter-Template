@@ -1,0 +1,11 @@
+<%= render partial: 'shared/index_admin' %>
+<%= link_to t('shared.actions.with_obj.view',
+              obj: t("activerecord.models.#{object.model_name.singular}",
+                     count: 1)),
+            show_path,
+            class: 'btn btn-default' %>
+<%= link_to t('shared.actions.with_obj.view_all',
+              obj: t("activerecord.models.#{object.model_name.singular}",
+                     count: 999)),
+            index_path,
+            class: 'btn btn-default' %>

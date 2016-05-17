@@ -4,9 +4,14 @@
                 user_email: @user.email) %>
 
 <div class='actions'>
-  <%= view_all_button(@user) %>
-  <%= edit_button(@user, edit_admin_user_path) if can? :edit, @user %>
-  <%= destroy_button(@user, admin_user_path) if can? :destroy, @user %>
+  <%= render partial: 'shared/show_actions',
+        locals: {
+          object: @user,
+          index_path: admin_users_path,
+          show_path: admin_user_path,
+          edit_path: edit_user_content_path
+                }
+  %>
 </div>
 
 <dl class='dl-horizontal'>

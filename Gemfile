@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ##################### Starter Template Gems #########################
 
 # The framework! :)
-gem 'rails', '4.2.2'
+gem 'rails', '4.2.6'
 
 # Connection to MySql database
 gem 'mysql2', '~> 0.3.18'
@@ -49,7 +49,7 @@ gem 'twitter-bootstrap-rails', '~> 3.2.0'
 gem 'formtastic-bootstrap', '~> 3.1.0'
 
 # Authentication
-gem 'devise', '~> 3.4.1'
+gem 'devise', '~> 3.5.6'
 
 # Authorization
 gem 'cancancan', '~> 1.10.1'
@@ -61,13 +61,22 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'font-awesome-sass', '~> 4.4.0'
 
 # Ruby server
-gem 'puma', '~> 2.11.1'
+gem 'puma', '~> 3.4.0'
 
 # sends updates to google analytics when turbolinks changes page
 gem 'google-analytics-turbolinks', '~> 0.0.4'
 
 # Sends email when exception or error is thrown
-gem 'exception_notification', '~> 4.1', '>= 4.1.1'
+gem 'exception_notification', '~> 4.1', '>= 4.1.4'
+
+# translate models
+gem 'globalize', '~> 5.0', '>= 5.0.1'
+
+# makes translation forms easier
+gem 'globalize-accessors', '~> 0.2.1' 
+
+# send variables to javascript
+gem 'gon', '~> 6.0', '>= 6.0.1'
 
 group :development do
   # Silences assets-related logging
@@ -77,22 +86,26 @@ group :development do
   gem 'bullet', '~> 4.14.5'
 
   # Static code analyzer that finds potential security issues
-  gem 'brakeman', '~> 3.0.5', require: false
+  gem 'brakeman', '~> 3.2.1', require: false
 
   # Finds unused and missing translations
-  gem 'i18n-tasks', '~> 0.8.3'
+  gem 'i18n-tasks', '~> 0.9.5'
 
   # Server-related tasks (such as deploy)
-  gem 'mina', '~> 0.3.3', require: false
+  gem 'mina', '~> 0.3.8', require: false
 
   # Mina for multiple servers
-  gem 'mina-multistage', '~> 1.0.1', require: false
+  gem 'mina-multistage', '~> 1.0.2', require: false
 
   # Prints arrays, hashes, etc. beautifully
   gem 'awesome_print', '~> 1.6', '>= 1.6.1'
 
   # Export and import locale files to work with translators
   gem 'locales_export_import', '~> 0.4.2'
+
+  # make dev environment faster
+  gem 'rails-dev-boost', '~> 0.3.0'  
+  gem 'rb-inotify', '~> 0.9.7'
 end
 
 group :test do

@@ -1,0 +1,8 @@
+<%= render partial: 'shared/index_admin' %>
+<%= if can? :new, model_class
+  link_to t('shared.actions.with_obj.new',
+            obj: t("activerecord.models.#{model_class.model_name.singular}",
+                   count: 1)),
+          new_path,
+          class: 'btn btn-primary'
+end %>

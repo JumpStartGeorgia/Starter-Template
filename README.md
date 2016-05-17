@@ -2,12 +2,47 @@
 
 This Rails 4 Starter Template is meant as a foundation upon which Rails applications can be built quickly and sustainably. It uses the following technologies:
 
-- Deploy: Mina
+- Ruby: 2.3
+- Rails: 4.2.6
+- Authentication: Devise 3.5.6
+- Authorization: CanCanCan 1.10.1
+- Model/Data Translations: Globalize 5.0
+- Responsive Design: Twitter Bootstrap Rails 3.2.0
+- Error Emails: Exception Notification 4.1
+- Database: MySQL (mysql2 0.3.18)
+- Deploy: Mina 0.3.8
+- Rails Server: Puma 3.4.0
 - HTML Server: Nginx
-- Rails Server: Puma
 
-## Usage
 
+
+
+## Getting Started
+
+
+### Requirements
+The following software/apps should be installed in order to use the template:
+* git
+* rbenv
+* Ruby 2.x
+* nginx - for staging/production server
+
+
+### Copying the Template
+You can use this template in one of two ways:
+* clone and erase git history to start with clean git log
+* clone and keep remote reference to repo so you can pull in template updates
+
+#### Clone and Erase Git History
+Using the terminal, go to the directory you want the template to be added to. Copy and run in terminal (or see below for command explanations):
+
+```
+git clone git@github.com:JumpStartGeorgia/Bootstrap-Starter.git .
+rm -rf .git
+git init
+```
+
+#### Clone and Setup Remote Reference
 Copy and run in terminal (or see below for command explanations):
 
 ```
@@ -23,7 +58,47 @@ git merge template/master
 4. Run `git merge template/master` to merge in changes from the template repository into your current branch. If you have committed changes to your project since the last time you merged in the template repository (or if this is your first time merging in the repository), you may have to resolve merge conflicts in your code.
 5. Repeat steps #3 and #4 every so often in order to incorporate changes in the template repository.
 
-## Using Mina
+
+### Initialize Settings
+The template uses the dotenv-rails gem which allows you to save enviornment variables in an .env at the root of the project instead of setting them at the computer level in /etc/environment. There is a .env.example template file that you should copy and rename to .env. The following variables should be set in the .env file:
+* SECRET_KEY_BASE - A secret key for the app that can be created by running 'rake secret' at the command line.
+* DEVISE_SECRET_KEY - A secret key for the app that can be created by running 'rake secret' at the command line.
+* DB_NAME - name of the database
+* DB_USER - database user
+* DB_PASSWORD - database user password
+* TEST_DB_NAME - name of test database (optional)
+* TEST_DB_USER - database user (optional)
+* TEST_DB_PASSWORD - database user password (optional)
+
+The template uses the exception_notification gem which sends emails when errors occur. In order to send these emails, the following variables need to be defined:
+* APPLICATION_ERROR_FROM_EMAIL - the email address to send the email from
+* APPLICATION_FEEDBACK_TO_EMAIL - the email address to send the email to
+* APPLICATION_FEEDBACK_FROM_EMAIL - the email address to send feedback emails (notifications) from
+* APPLICATION_FEEDBACK_FROM_PWD - the password of the email address to send feedback emails (notifications) from
+
+
+NOTE - after you deploy the app you will have to set these values on the servers.
+
+### Setup Database
+After the above settings have been set, run 'rake db:create' from the command line to create the database and run the migrations and seed file. This will create the users and roles table, create default roles, and create the page contents table.
+
+
+## Guidelines
+
+### Authentication / Authorization
+The template uses devise to authenticate and cancancan to authorize. The template does not use oauth login (i.e., facebook), so if you want that you will have to add it. 
+
+By default the template comes with three roles: super_admin, site_admin, and content_manager. You can look at the ability.rb file in app/models to see what these roles have access to. You can change these roles as you see fit. If you add/remove roles, make sure to update the admin controllers and views to use these new roles.
+
+The User model contains a method called is? that takes in a role and sees if the user has the role provided. The input can also be an array of roles to see if the user has any of the provided roles.
+
+### Translations
+Site interface translations are located in the config/locales folder in yml files. The files are organized into folders to try and make it easier to maintain the translations. You can use the i18n-tasks gem to find translations that are missing (i.e., in English but not in Georgian) along with other helpful methods.
+
+Content translations are done through the globalize gem. You can see an example of this at the top of the PageContent model with the 'translates' setting. There is a translated_inputs partial in views/shared/form that allows you to build nice forms with a tab for each language. You can view the page content form at views/admin/page_contents/_form.html.erb for an example of this in action.
+
+
+## How to Deploy Using Mina
 
 ### Setup
 

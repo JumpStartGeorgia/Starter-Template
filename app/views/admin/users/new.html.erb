@@ -4,7 +4,12 @@
 
 <% if user_signed_in? %>
   <div class='actions'>
-    <%= view_all_button(@user) %>
+    <%= render partial: 'shared/new_actions',
+          locals: {
+            object: @user,
+            index_path: admin_users_path
+                  }
+    %>
   </div>
 <% end %>
 

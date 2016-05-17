@@ -13,12 +13,10 @@ class User < ActiveRecord::Base
   # Email already required by devise
   validates :role, presence: true
 
+  # requested_role may be the name of one role (a string)
+  # or an array of possible roles
   def is?(requested_role)
-    if role
-      role.name == requested_role
-    else
-      return false
-    end
+    self.role_id && ((requested_role.is_a?(String) && role.name == requested_role) || (requested_role.is_a?(Array) && requested_role.include?(self.role.name)))
   end
 
   def manageable_roles

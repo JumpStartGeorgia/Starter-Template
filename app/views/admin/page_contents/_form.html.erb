@@ -1,0 +1,27 @@
+<% object = @page_content %>
+<%= semantic_form_for [:admin,object] do |f| %>
+  <%= f.semantic_errors *f.object.errors.keys %>
+  <%= f.inputs do %>
+    <% if can? :create, PageContent %>
+      <%= f.input :name %>
+    <% end %>
+
+    <%= render layout: 'shared/form/translated_inputs',
+               locals: { object: object } do |enabled_locale, enabled_locale_name| %>
+      <%= f.input "title_#{enabled_locale}",
+                  label: t('shared.labels.translated_field',
+                         field: t('activerecord.attributes.page_content.title'),
+                         language: enabled_locale_name) %>
+      <%= f.input "content_#{enabled_locale}",
+                  as: :text,
+                  label: t('shared.labels.translated_field',
+                         field: t('activerecord.attributes.page_content.content'),
+                         language: enabled_locale_name),
+                  input_html: { class: 'tinymce' } %>
+    <% end %>
+  <% end %>
+
+  <%= f.actions do %>
+    <%= f.action :submit, button_html: { class: 'btn btn-success' } %>
+  <% end %>
+<% end %>

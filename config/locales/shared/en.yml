@@ -20,12 +20,21 @@ en:
       account: Account
       actions: Actions
       jumpstart:
-        slogan: JumpStart Georgia - We communicate data better!
+        slogan: JumpStart Georgia - Informing Communities with Data and Design
       name: Rails Starter Template
+      description: This is a description of the project that will appear in the meta tags.
+    links:
+      page_contents: Edit Page Text
+      admin: Admin Section
+    labels:
+      translated_field: "%{field} (%{language})"
     locale:
       short:
         en: En
         ka: "ქა"
+      long:
+        en: English
+        ka: "ქართული"
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

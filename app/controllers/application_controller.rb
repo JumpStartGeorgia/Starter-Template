@@ -20,21 +20,26 @@ class ApplicationController < ActionController::Base
   ##############################################
   # Authorization #
 
+  # role is either the name of the role (string) or an array of role names (string)
+  def valid_role?(role)
+    redirect_to root_path(locale: I18n.locale), :notice => t('shared.msgs.not_authorized') if !current_user || !((role.is_a?(String) && current_user.is?(role)) || (role.is_a?(Array) && role.include?(current_user.role.name)))
+  end
+
   rescue_from CanCan::AccessDenied do |_exception|
     if user_signed_in?
-      not_authorized
+      not_authorized(root_path(locale: I18n.locale))
     else
-      not_found
+      not_authorized
     end
   end
 
-  def not_authorized
-    redirect_to :back, alert: t('shared.msgs.not_authorized')
+  def not_authorized(redirect_path = new_user_session_path)
+    redirect_to redirect_path, alert: t('shared.msgs.not_authorized')
   rescue ActionController::RedirectBackError
-    redirect_to root_path
+    redirect_to root_path(locale: I18n.locale)
   end
 
-  def not_found(redirect_path = root_path)
+  def not_found(redirect_path = root_path(locale: I18n.locale))
     Rails.logger.debug('Not found redirect')
     redirect_to redirect_path,
                 notice: t('shared.msgs.does_not_exist')

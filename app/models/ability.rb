@@ -23,6 +23,7 @@ class Ability
 
   def init_site_admin_abilities(content_resources)
     can :manage, content_resources
+    can [:read, :edit, :update], PageSection
     can :manage, User
     can :manage, Role
     cannot :manage, User, role: { name: 'super_admin' }
