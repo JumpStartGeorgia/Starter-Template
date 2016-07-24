@@ -15,10 +15,7 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 - HTML Server: Nginx
 
 
-
-
 ## Getting Started
-
 
 ### Requirements
 The following software/apps should be installed in order to use the template:
@@ -26,7 +23,6 @@ The following software/apps should be installed in order to use the template:
 * rbenv
 * Ruby 2.x
 * nginx - for staging/production server
-
 
 ### Copying the Template
 You can use this template in one of two ways:
@@ -86,7 +82,7 @@ After the above settings have been set, run 'rake db:create' from the command li
 ## Guidelines
 
 ### Authentication / Authorization
-The template uses devise to authenticate and cancancan to authorize. The template does not use oauth login (i.e., facebook), so if you want that you will have to add it. 
+The template uses devise to authenticate and cancancan to authorize. The template does not use oauth login (i.e., facebook), so if you want that you will have to add it.
 
 By default the template comes with three roles: super_admin, site_admin, and content_manager. You can look at the ability.rb file in app/models to see what these roles have access to. You can change these roles as you see fit. If you add/remove roles, make sure to update the admin controllers and views to use these new roles.
 
@@ -96,6 +92,35 @@ The User model contains a method called is? that takes in a role and sees if the
 Site interface translations are located in the config/locales folder in yml files. The files are organized into folders to try and make it easier to maintain the translations. You can use the i18n-tasks gem to find translations that are missing (i.e., in English but not in Georgian) along with other helpful methods.
 
 Content translations are done through the globalize gem. You can see an example of this at the top of the PageContent model with the 'translates' setting. There is a translated_inputs partial in views/shared/form that allows you to build nice forms with a tab for each language. You can view the page content form at views/admin/page_contents/_form.html.erb for an example of this in action.
+
+
+## Helpers
+
+### Annotate
+Annotate is gem that will add the table column names to the top of the models. Run the following command after you run a `rake db:migrate` that changes the database structure:
+  `bundle exec annotate --exclude fixtures`
+
+### Adding Missing Translations
+If you are using translations and are using scopes with `with_translations(I18n.locale)`, content for this locale must exist in order for that scope to return records. To ensure this works, there is a model base class called `AddMissingTranslation` that you can use that has methods to make sure required fields are populated for all locales before saving. You can refer to the PageContent model to see this in action. To use this base class, do the following:
+* Update your model definition to inherit from the `AddMissingClass` class:
+```ruby
+  class PageContent < AddMissingTranslation
+```
+* Add two private methods at the bottom of the model:
+```ruby
+  private
+
+  def has_required_translations?(trans)
+    trans.title.present?
+  end
+
+  def add_missing_translations(default_trans)
+    self.title = default_trans.title if self["title_#{Globalize.locale}"].blank?
+  end
+```
+  * has_required_translations? - In this method include a test to make sure the fields that are required have content. If there are more than one required field, simply use an && to combine them all together.
+  * add_missing_translations - For each required field listed in the method above, write a statement that sets the value. Simply copy the example and change `title` with whatever the field name is.
+
 
 
 ## How to Deploy Using Mina

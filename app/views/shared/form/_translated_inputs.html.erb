@@ -1,15 +1,21 @@
+<%
+  # use id_suffix if using this partial multiple times on one page
+  # so tabs know which panel to show
+  id_suffix ||= ''
+  label = id_suffix.present? ? "-" + id_suffix : ''
+%>
 <div class='translated-inputs'>
-  <ul class="nav nav-tabs form-translation-tabs" role="tablist">
-    <% object.globalize_locales.each do |enabled_locale| %>
+  <ul class="nav nav-tabs form-translation-tabs" role="tabList">
+    <% sort_locales(object.globalize_locales).each do |enabled_locale| %>
       <% cls = enabled_locale == I18n.default_locale ? 'active' : '' %>
-      <li role="presentation" class="<%= cls %>"><a href="#translation-<%= enabled_locale %>" aria-controls="<%= enabled_locale %>" role="tab" data-toggle="tab"><%= t("shared.locale.long.#{enabled_locale}") %></a></li>
+      <li role="presentation" class="<%= cls %>"><a href="#translation-<%= enabled_locale.to_s + id_suffix %>" aria-controls="<%= enabled_locale %>" role="tab" data-toggle="tab"><%= t("shared.locale.long.#{enabled_locale}") %></a></li>
     <% end %>
   </ul>
 
   <div class="tab-content form-translation-content">
-    <% object.globalize_locales.each do |enabled_locale| %>
+    <% sort_locales(object.globalize_locales).each do |enabled_locale| %>
       <% cls = enabled_locale == I18n.default_locale ? 'active' : '' %>
-      <div role="tabpanel" class="tab-pane <%= cls %>" id="translation-<%= enabled_locale %>">
+      <div role="tabpanel" class="tab-pane <%= cls %>" id="translation-<%= enabled_locale.to_s + id_suffix %>" data-locale="<%= enabled_locale %>">
         <% enabled_locale_name = t("shared.locale.long.#{enabled_locale}") %>
         <%= yield enabled_locale.to_s, enabled_locale_name %>
       </div>

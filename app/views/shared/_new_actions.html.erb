@@ -1,5 +1,11 @@
+<%
+  hide_object_name ||= false
+  object_name_plural = !hide_object_name ? t("activerecord.models.#{object.model_name.singular}", count: 999) : ''
+  object_name_singular = !hide_object_name ? t("activerecord.models.#{object.model_name.singular}", count: 1) : ''
+%>
+
 <%= render partial: 'shared/index_admin' %>
 <%= link_to t('shared.actions.with_obj.view_all',
-              obj: t("activerecord.models.#{object.model_name.singular}", count: 999)), 
+              obj: object_name_plural),
             index_path,
             class: 'btn btn-default'  %>

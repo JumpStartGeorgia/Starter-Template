@@ -3,10 +3,10 @@ ka:
   activerecord:
     attributes:
       user:
-        email: Email
-        password: Password
-        role: Role
+        email: ელ.ფოსტა
+        password: პაროლი
+        role: როლი
     models:
       user:
-        one: User
-        other: Users
+        one: მომხმარებელი
+        other: მომხმარებლები

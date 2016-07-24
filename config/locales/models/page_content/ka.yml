@@ -3,10 +3,10 @@ ka:
   activerecord:
     attributes:
       page_content:
-        content: Content
-        title: Title of Content Section (optional)
-        name: Unique Name
+        content: შიგთავსი
+        name: უნიკალური სახელი
+        title: შინაარსის სექციის სათაური (ნებაყოფლობითია)
     models:
       page_content:
-        one: Page Content
-        other: Page Contents
+        one: გვერდის შიგთავსი
+        other: გვერდის შიგთავსები

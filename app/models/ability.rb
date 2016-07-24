@@ -13,6 +13,7 @@ class Ability
       can :manage, :all
     elsif user.is? 'site_admin'
       init_site_admin_abilities(content_resources)
+      init_page_section
     elsif user.is? 'content_manager'
       can :manage, content_resources
     end
@@ -28,5 +29,9 @@ class Ability
     can :manage, Role
     cannot :manage, User, role: { name: 'super_admin' }
     cannot :manage, Role, name: 'super_admin'
+  end
+
+  def init_page_section
+    can [:read, :edit, :update], PageContent
   end
 end

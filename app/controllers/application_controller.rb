@@ -18,6 +18,13 @@ class ApplicationController < ActionController::Base
   end
 
   ##############################################
+  # helpers
+
+  def clean_filename(filename)
+    filename.strip.to_slug.transliterate.to_s.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+  end
+
+  ##############################################
   # Authorization #
 
   # role is either the name of the role (string) or an array of role names (string)
