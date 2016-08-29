@@ -22,7 +22,6 @@
 ////////////////////////////////////////
 ///////  Load dependencies here  ///////
 
-// Bootstrap Javascript
 //= require twitter/bootstrap/transition
 //= require twitter/bootstrap/alert
 //= require twitter/bootstrap/modal
