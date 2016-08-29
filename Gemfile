@@ -6,8 +6,8 @@ source 'https://rubygems.org'
 # The framework! :)
 gem 'rails', '4.2.6'
 
-# Connection to MySql database
-gem 'mysql2', '~> 0.3.18'
+# Use postgresql as the database for Active Record
+gem 'pg', '~> 0.18.4'
 
 # SCSS parsing in asset pipeline
 gem 'sass-rails', '~> 5.0'

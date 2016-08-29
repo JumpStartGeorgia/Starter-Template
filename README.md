@@ -17,6 +17,17 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 
 ## Getting Started
 
+### With Docker
+1. Setup .env file
+  1. `cp .env.example .env`
+  2. Add Secrets (use `rake secret` to generate values)
+  3. Use `postgres` as the value for `DB_USER` and `TEST_DB_USER`
+  4. Set database names for `DB_NAME` and `TEST_DB_NAME`
+2. Install [docker](https://www.docker.com/products/overview)
+3. `docker-compose build`
+4. `docker-compose up`
+5. `doco run web rake db:create db:migrate db:seed` (See db/seeds.rb for more seeding options)
+
 ### Requirements
 The following software/apps should be installed in order to use the template:
 * git
