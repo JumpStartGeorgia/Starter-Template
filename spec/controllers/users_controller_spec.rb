@@ -247,7 +247,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: super_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_user_session_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
         expect(user.role.name).to eq('site_admin')
       end
@@ -258,7 +258,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: user.to_param, user: super_admin_attributes },
             valid_session
         user.reload
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_user_session_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
         expect(user.role.name).to eq('content_manager')
       end
@@ -278,7 +278,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             { id: site_admin_user.to_param, user: super_admin_attributes },
             valid_session
         site_admin_user.reload
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_user_session_path)
         expect(flash[:alert]).to eq(t('shared.msgs.not_authorized'))
         expect(site_admin_user.role.name).to eq('site_admin')
       end
