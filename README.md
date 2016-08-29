@@ -26,7 +26,8 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 2. Install [docker](https://www.docker.com/products/overview)
 3. `docker-compose build`
 4. `docker-compose up`
-5. `doco run web rake db:create db:migrate db:seed` (See db/seeds.rb for more seeding options)
+5. `docker-compose run web rake db:create db:migrate`
+6. `docker-compose run web rake db:seed` (See db/seeds.rb for more seeding options)
 
 ### Requirements
 The following software/apps should be installed in order to use the template:

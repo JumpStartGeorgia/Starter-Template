@@ -110,6 +110,9 @@ group :development do
 
   # show model attributes (table fields) in model
   gem 'annotate', '~> 2.7'
+
+  # Adds a console to application errors in browser
+  gem 'web-console', '~> 2.0'
 end
 
 group :test do
@@ -151,9 +154,6 @@ end
 group :development, :test do
   # Debugging: write 'binding.pry' in Ruby code to debug in terminal
   gem 'pry-byebug', '~> 3.1.0'
-
-  # Adds a console to application errors in browser
-  gem 'web-console', '~> 2.0'
 
   # Rails app preloader; runs app in background to speed up dev environment
   gem 'spring', '~> 1.3.5'
