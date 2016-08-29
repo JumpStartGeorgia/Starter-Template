@@ -1,4 +1,4 @@
-class AddMissingTranslation < ActiveRecord::Base
+class AddMissingTranslation < ApplicationRecord
   self.abstract_class = true
 
   #######################

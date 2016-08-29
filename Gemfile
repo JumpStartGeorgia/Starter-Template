@@ -4,37 +4,37 @@ source 'https://rubygems.org'
 ##################### Starter Template Gems #########################
 
 # The framework! :)
-gem 'rails', '4.2.6'
+gem 'rails', '~> 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18.4'
 
 # SCSS parsing in asset pipeline
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 5.0.6'
 
 # CSS and JS compression for production
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '~> 3.0.2'
 
 # Makes jQuery available in rails JS
-gem 'jquery-rails', '~> 4.0.3'
+gem 'jquery-rails', '~> 4.2.1'
 
 # Uses caching to improve performance for internal page changes
-gem 'turbolinks', '~> 2.5.3'
+gem 'turbolinks', '~> 5.0.1'
 
 # JSON creation
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.6.0'
 
 # Stores project secrets in environment variables
-gem 'dotenv-rails', '~> 2.0.0'
+gem 'dotenv-rails', '~> 2.1.1'
 
 # Makes compatibility easier for jQuery and turbolinks
 gem 'jquery-turbolinks', '~> 2.1.0'
 
 # Makes jQuery UI (like jQuery datepicker) available
-gem 'jquery-ui-rails', '~> 5.0.3'
+gem 'jquery-ui-rails', '~> 5.0.5'
 
 # Simplifies form creation
-gem 'formtastic', '~> 3.1.3'
+gem 'formtastic', '~> 3.1.4'
 
 # JavaScript interpreter
 gem 'therubyracer', '~> 0.12.1'
@@ -49,7 +49,7 @@ gem 'twitter-bootstrap-rails', '~> 3.2.0'
 gem 'formtastic-bootstrap', '~> 3.1.0'
 
 # Authentication
-gem 'devise', '~> 3.5.6'
+gem 'devise', '~> 4.2.0'
 
 # Authorization
 gem 'cancancan', '~> 1.10.1'
@@ -61,7 +61,7 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'font-awesome-sass', '~> 4.4.0'
 
 # Ruby server
-gem 'puma', '~> 3.4.0'
+gem 'puma', '~> 3.6'
 
 # sends updates to google analytics when turbolinks changes page
 gem 'google-analytics-turbolinks', '~> 0.0.4'
@@ -69,21 +69,25 @@ gem 'google-analytics-turbolinks', '~> 0.0.4'
 # Sends email when exception or error is thrown
 gem 'exception_notification', '~> 4.1', '>= 4.1.4'
 
-# translate models
-gem 'globalize', '~> 5.0', '>= 5.0.1'
 
-# makes translation forms easier
+# translate models
+gem 'activemodel-serializers-xml', '~> 1.0.1'
+gem 'globalize', github: 'globalize/globalize'
 gem 'globalize-accessors', '~> 0.2.1'
 
 # send variables to javascript
 gem 'gon', '~> 6.0', '>= 6.0.1'
 
+# required to load assets
+gem 'coffee-script', '~> 2.4', '>= 2.4.1'
+
 group :development do
   # Silences assets-related logging
-  gem 'quiet_assets', '~> 1.0.3'
+  # Not working in Rails 5
+  # gem 'quiet_assets', '~> 1.1.0'
 
   # Recommends SQL query performance optimizations
-  gem 'bullet', '~> 4.14.5'
+  gem 'bullet', '~> 5.3'
 
   # Static code analyzer that finds potential security issues
   gem 'brakeman', '~> 3.2.1', require: false
@@ -102,11 +106,6 @@ group :development do
 
   # Export and import locale files to work with translators
   gem 'locales_export_import', '~> 0.4.2'
-
-  # make dev environment faster
-  gem 'rails-dev-boost', '~> 0.3.0'
-  gem 'rb-fsevent', '>= 0.9.1' # needed for mac
-  # gem 'rb-inotify', '~> 0.9.7' # needed for linux
 
   # show model attributes (table fields) in model
   gem 'annotate', '~> 2.7'
@@ -127,7 +126,7 @@ group :test do
   gem 'factory_girl_rails', '~> 4.5.0'
 
   # Testing API for Rack apps
-  gem 'rack-test', '0.6.2'
+  gem 'rack-test', '~> 0.6.3'
 
   # Feature testing
   gem 'capybara', '~> 2.4.4'

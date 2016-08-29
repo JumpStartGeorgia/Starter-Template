@@ -16,11 +16,7 @@ RUN apt-get update -qq \
     && apt-get install -y \
       build-essential \
       libpq-dev \
-      nodejs \
-# Remove git so that messing with git repo is not possible in container
-    && apt-get remove -y git \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/
+      nodejs
 
 # Make it possible to run rspec, rake, bundle, etc. from a shell session
 # in the container without prepending bundle exec

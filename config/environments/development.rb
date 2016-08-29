@@ -47,18 +47,13 @@ Rails.application.configure do
   # Recommended by Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.alert = true
-    Bullet.bullet_logger = true
-    Bullet.console = true
-    Bullet.rails_logger = true
-  end
-
   # Setup email to be intercepted by mailcatcher
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'localhost',
     port: 1025
   }
+
+  # Allows web console when running rails on docker
+  config.web_console.whitelisted_ips = '172.19.0.1'
 end

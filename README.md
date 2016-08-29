@@ -9,7 +9,7 @@ This Rails 4 Starter Template is meant as a foundation upon which Rails applicat
 - Model/Data Translations: Globalize 5.0
 - Responsive Design: Twitter Bootstrap Rails 3.2.0
 - Error Emails: Exception Notification 4.1
-- Database: MySQL (mysql2 0.3.18)
+- Database: Postgres
 - Deploy: Mina 0.3.8
 - Rails Server: Puma 3.4.0
 - HTML Server: Nginx
