@@ -41,8 +41,8 @@ Rails.application.configure do
   # public folder. Necessary for custom mina assets deploy setup.
   config.assets.prefix = '/assets'
 
-  # Remove asset-related logger output
-  config.assets.quiet = true
+  # Set to true to remove asset-related logger output
+  config.assets.quiet = false
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
