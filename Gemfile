@@ -108,6 +108,12 @@ group :development do
 
   # Adds a console to application errors in browser
   gem 'web-console', '~> 2.0'
+
+  # Useful performance profiling gems. Load a page with url param ?pp=help
+  # for more info.
+  gem 'flamegraph', '~> 0.9.5'
+  gem 'rack-mini-profiler', '~> 0.10.1'
+  gem 'stackprof', '~> 0.2.9'
 end
 
 group :test do
