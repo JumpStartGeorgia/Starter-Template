@@ -82,10 +82,6 @@ gem 'gon', '~> 6.0', '>= 6.0.1'
 gem 'coffee-script', '~> 2.4', '>= 2.4.1'
 
 group :development do
-  # Silences assets-related logging
-  # Not working in Rails 5
-  # gem 'quiet_assets', '~> 1.1.0'
-
   # Recommends SQL query performance optimizations
   gem 'bullet', '~> 5.3'
 
