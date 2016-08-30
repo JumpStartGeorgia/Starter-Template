@@ -1,3 +1,7 @@
+# The bundle service is based on the data volume container pattern. More info:
+# - https://docs.docker.com/engine/tutorials/dockervolumes/#/creating-and-mounting-a-data-volume-container
+# - http://www.offermann.us/2013/12/tiny-docker-pieces-loosely-joined.html
+
 version: '2'
 services:
 
@@ -6,6 +10,10 @@ services:
     image: postgres:9.4.1
     ports:
       - "5432:5432"
+    volumes:
+      - /etc/postgresql
+      - /var/log/postgresql
+      - /var/lib/postgresql
 
   web:
     build: .
