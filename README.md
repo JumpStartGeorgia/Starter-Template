@@ -3,7 +3,7 @@
 This Rails 4 Starter Template is meant as a foundation upon which Rails applications can be built quickly and sustainably. It uses the following technologies:
 
 - Ruby: 2.3
-- Rails: 4.2.6
+- Rails: ~> 5.0.0
 - Authentication: Devise 3.5.6
 - Authorization: CanCanCan 1.10.1
 - Model/Data Translations: Globalize 5.0
