@@ -2,6 +2,10 @@
 # - https://docs.docker.com/engine/tutorials/dockervolumes/#/creating-and-mounting-a-data-volume-container
 # - http://www.offermann.us/2013/12/tiny-docker-pieces-loosely-joined.html
 
+# To debug with binding.pry, run the following in a separate
+# bash window:
+# run docker-compose attach [web_container_name]
+
 version: '2'
 services:
 
@@ -26,6 +30,9 @@ services:
       - .:/myapp
     volumes_from:
       - bundle
+    # enables debugging with binding.pry
+    tty: true
+    stdin_open: true
 
   bundle:
     image: startertemplate_web
