@@ -52,7 +52,7 @@ gem 'formtastic-bootstrap', '~> 3.1.0'
 gem 'devise', '~> 4.2.0'
 
 # Authorization
-gem 'cancancan', '~> 1.10.1'
+gem 'cancancan', '~> 1.15.0'
 
 # So that our SCSS can use bootstrap variables
 gem 'bootstrap-sass', '~> 3.3.5'
@@ -131,7 +131,7 @@ group :test do
   gem 'rack-test', '~> 0.6.3'
 
   # Feature testing
-  gem 'capybara', '~> 2.4.4'
+  gem 'capybara', '~> 2.8.1'
 
   # Can launch browser in case of feature spec errors
   gem 'launchy', '~> 2.4.3'
