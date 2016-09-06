@@ -118,7 +118,7 @@ end
 
 group :test do
   # Specification testing
-  gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-rails', '~> 3.5.2'
 
   # Adds syntax to check that a collection has a certain number of something
   # Ex: expect(new_user).to have(1).error_on(:role)
