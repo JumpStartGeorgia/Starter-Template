@@ -7,37 +7,26 @@ RSpec.configure do |config|
     I18n.l(string, options)
   end
 
-  # Makes controllers work with default locale
-  # Taken from http://stackoverflow.com/a/19079076/3115911
+  # Adds locale to params in controller tests
+  # Originally taken from http://stackoverflow.com/a/19079076/3115911,
+  # then modified to work with Rails 5.
   module ActionController
     class TestCase
       module Behavior
-        module DefaultLocale
+        module LocaleParameter
           # rubocop:disable MethodLength
-          def process(
-            action,
-            http_method = 'GET',
-            parameters = nil,
-            session = nil,
-            flash = nil
-          )
+          def process(action, parameters = {params: {}})
 
             unless I18n.locale.nil?
-              parameters = { locale: I18n.locale }.merge(parameters || {})
+              parameters[:params][:locale] = I18n.locale
             end
 
-            super(
-              action,
-              http_method,
-              parameters,
-              session,
-              flash
-            )
+            super(action, parameters)
           end
           # rubocop:enable MethodLength
         end
 
-        prepend Behavior::DefaultLocale
+        prepend Behavior::LocaleParameter
       end
     end
   end

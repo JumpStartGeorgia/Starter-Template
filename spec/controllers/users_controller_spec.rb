@@ -144,8 +144,8 @@ RSpec.describe Admin::UsersController, type: :controller do
         it 'redirects to the user' do
           user = FactoryGirl.create(:user, valid_attributes)
           put :update,
-              { id: user.to_param, user: valid_attributes },
-              valid_session
+              params: { id: user.to_param, user: valid_attributes },
+              session: valid_session
           expect(response).to redirect_to([:admin, user])
         end
       end
