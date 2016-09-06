@@ -11,31 +11,33 @@ RSpec.configure do |config|
   # Taken from http://stackoverflow.com/a/19079076/3115911
   module ActionController
     class TestCase
-      # Top-level doc comment for rubocop
       module Behavior
-        # rubocop:disable MethodLength
-        def process_with_default_locale(
-          # rubocop:enable MethodLength
-          action,
-          http_method = 'GET',
-          parameters = nil,
-          session = nil,
-          flash = nil
-        )
-
-          parameters = { locale: I18n.locale }
-                       .merge(parameters || {}) unless I18n.locale.nil?
-
-          process_without_default_locale(
+        module DefaultLocale
+          # rubocop:disable MethodLength
+          def process(
             action,
-            http_method,
-            parameters,
-            session,
-            flash
+            http_method = 'GET',
+            parameters = nil,
+            session = nil,
+            flash = nil
           )
+
+            unless I18n.locale.nil?
+              parameters = { locale: I18n.locale }.merge(parameters || {})
+            end
+
+            super(
+              action,
+              http_method,
+              parameters,
+              session,
+              flash
+            )
+          end
+          # rubocop:enable MethodLength
         end
 
-        alias_method_chain :process, :default_locale
+        prepend Behavior::DefaultLocale
       end
     end
   end
