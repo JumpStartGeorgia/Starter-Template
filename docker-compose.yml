@@ -21,6 +21,7 @@ services:
 
   web:
     build: .
+    image: startertemplate_web
     command: /bin/sh -c "rm -f tmp/pids/server.pid; bundle exec rails server --port 3000 --binding 0.0.0.0"
     ports:
       - "3000:3000"
