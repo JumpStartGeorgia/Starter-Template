@@ -54,7 +54,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
 
     before(:example) do
-      sign_in :user, site_admin_user
+      sign_in site_admin_user, scope: :user
     end
 
     it 'assigns all users as @users' do
