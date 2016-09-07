@@ -405,7 +405,6 @@ DEPENDENCIES
   jquery-turbolinks (~> 2.1.0)
   jquery-ui-rails (~> 5.0.5)
   launchy (~> 2.4.3)
-  less-rails (~> 2.7, >= 2.7.1)
   locales_export_import (~> 0.4.2)
   mina (~> 0.3.8)
   mina-multistage (~> 1.0.2)
