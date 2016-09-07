@@ -1,11 +1,11 @@
+---
 ka:
   formtastic:
-    :yes: 'დიახ'
-    :no: 'არა'
-    :create: '%{model} შექმნა'
-    :update: '%{model} შენახვა'
-    :submit: '%{model} შენახვა'
-    :cancel: '%{model} გაუქმება'
-    :reset: '%{model} გადატვირთვა'
-    :required: 'სავალდებულო'
-
+    cancel: "%{model} გაუქმება"
+    create: "%{model} შექმნა"
+    'no': არა
+    required: სავალდებულო
+    reset: "%{model} გადატვირთვა"
+    submit: "%{model} შენახვა"
+    update: "%{model} შენახვა"
+    'yes': დიახ
