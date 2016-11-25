@@ -4,10 +4,10 @@ source 'https://rubygems.org'
 ##################### Starter Template Gems #########################
 
 # The framework! :)
-gem 'rails', '4.2.6'
+gem 'rails', '4.2.7'
 
 # Connection to MySql database
-gem 'mysql2', '~> 0.3.18'
+gem 'mysql2', '~> 0.4.5'
 
 # SCSS parsing in asset pipeline
 gem 'sass-rails', '~> 5.0'
@@ -25,7 +25,7 @@ gem 'turbolinks', '~> 2.5.3'
 gem 'jbuilder', '~> 2.0'
 
 # Stores project secrets in environment variables
-gem 'dotenv-rails', '~> 2.0.0'
+gem 'dotenv-rails', '~> 2.1.1'
 
 # Makes compatibility easier for jQuery and turbolinks
 gem 'jquery-turbolinks', '~> 2.1.0'
@@ -49,7 +49,7 @@ gem 'twitter-bootstrap-rails', '~> 3.2.0'
 gem 'formtastic-bootstrap', '~> 3.1.0'
 
 # Authentication
-gem 'devise', '~> 3.5.6'
+gem 'devise', '~> 3.5.10'
 
 # Authorization
 gem 'cancancan', '~> 1.10.1'
@@ -61,13 +61,13 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'font-awesome-sass', '~> 4.4.0'
 
 # Ruby server
-gem 'puma', '~> 3.4.0'
+gem 'puma', '~> 3.6.0'
 
 # sends updates to google analytics when turbolinks changes page
 gem 'google-analytics-turbolinks', '~> 0.0.4'
 
 # Sends email when exception or error is thrown
-gem 'exception_notification', '~> 4.1', '>= 4.1.4'
+gem 'exception_notification', '~> 4.2', '>= 4.2.1'
 
 # translate models
 gem 'globalize', '~> 5.0', '>= 5.0.1'
@@ -76,7 +76,7 @@ gem 'globalize', '~> 5.0', '>= 5.0.1'
 gem 'globalize-accessors', '~> 0.2.1'
 
 # send variables to javascript
-gem 'gon', '~> 6.0', '>= 6.0.1'
+gem 'gon', '~> 6.1'
 
 group :development do
   # Silences assets-related logging
@@ -106,7 +106,7 @@ group :development do
   # make dev environment faster
   gem 'rails-dev-boost', '~> 0.3.0'
   gem 'rb-fsevent', '>= 0.9.1' # needed for mac
-  # gem 'rb-inotify', '~> 0.9.7' # needed for linux
+  gem 'rb-inotify', '~> 0.9.7' # needed for linux
 
   # show model attributes (table fields) in model
   gem 'annotate', '~> 2.7'
@@ -121,7 +121,7 @@ group :test do
   gem 'rspec-collection_matchers', '~> 1.1.2'
 
   # Easy data creation in tests
-  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'factory_girl_rails', '~> 4.7'
 
   # Testing API for Rack apps
   gem 'rack-test', '0.6.2'
@@ -150,7 +150,7 @@ end
 
 group :development, :test do
   # Debugging: write 'binding.pry' in Ruby code to debug in terminal
-  gem 'pry-byebug', '~> 3.1.0'
+  gem 'pry-byebug', '~> 3.4', '>= 3.4.1'
 
   # Adds a console to application errors in browser
   gem 'web-console', '~> 2.0'
